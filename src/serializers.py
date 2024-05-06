@@ -10,6 +10,16 @@ class ContactUsSerializer(serializers.ModelSerializer):
         model = ContactUs
         fields = ('first_name', 'email_address', 'last_name', 'message')
 
+class CommentCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ('user', 'comment_body', 'parent_comment')
+
+class ReplyCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ('user', 'comment_body', 'parent_comment')
+
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
@@ -21,9 +31,8 @@ class StorySerializer(serializers.ModelSerializer):
         fields = ('story_id', 'topic', 'image', 'short_description', 'created_at', 'author')
 
 class StoryDetailSerializer(serializers.ModelSerializer):
-    comment_id = CommentSerializer()
     model = Story
-    fields = ('story_id', 'topic', 'image', 'short_description', 'created_at', 'author','body', 'comment_id')
+    fields = '__all__'
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

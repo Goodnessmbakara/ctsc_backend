@@ -1,13 +1,23 @@
 from django.contrib.auth import get_user_model
 from rest_framework import generics
-from .models import ContactUs,Story
-from .serializers import ContactUsSerializer, StoryDetailSerializer,StorySerializer
+from .models import ContactUs,Story,Comment
+from .serializers import (ContactUsSerializer, StoryDetailSerializer,StorySerializer,
+                          CommentCreateSerializer, ReplyCreateSerializer)
 User = get_user_model()
 
 
 class ContactUsView(generics.CreateAPIView):
     queryset = ContactUs.objects.all()
     serializer_class =  ContactUsSerializer
+
+class CommentCreateView(generics.CreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentCreateSerializer
+
+class ReplyCreateView(generics.CreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = ReplyCreateSerializer
+
 
 class StoryListView(generics.ListAPIView):
     queryset = Story.objects.all()
