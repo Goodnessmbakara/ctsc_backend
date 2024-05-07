@@ -101,12 +101,11 @@ class Comment(models.Model):
     reply_to = models.ForeignKey("self", null=True, blank=True, on_delete = models.CASCADE)
 
     def likes_count(self):
-        self.likes.count()
+        self.like.all().count()
 
 class Like(models.Model):
-    comment = models.OneToOneField('Comment', on_delete=models.CASCADE, related_name = 'likes')
-    count = models.PositiveIntegerField(default = 0)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null = True)
+    comment = models.OneToOneField('Comment', on_delete=models.CASCADE, related_name = 'like')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null = True, blank = True)
 
     class Meta:
         unique_together = ('comment', 'user')

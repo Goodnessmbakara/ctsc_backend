@@ -31,7 +31,7 @@ class CommentAdmin(admin.ModelAdmin):
 
 @admin.register(Like)
 class LikeAdmin(admin.ModelAdmin):
-    list_display = ('user', 'comment', 'count')
+    list_display = ('user', 'comment')
     search_fields = ('user__email',)
 
 @admin.register(Event)

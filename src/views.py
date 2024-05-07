@@ -4,9 +4,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from .models import ContactUs,Story,Comment
+from .models import ContactUs,Story,Comment, Like
 from .serializers import (ContactUsSerializer, StoryDetailSerializer,StorySerializer,
-                          CommentSerializer)
+                          CommentSerializer, LikeSerializer)
 User = get_user_model()
 
 
@@ -55,13 +55,22 @@ class LatestFeaturedStoryView(APIView):
         else:
             return Response({"message": "No featured story found."}, status=status.HTTP_404_NOT_FOUND)
 
-
-
-
 class PreviousFeaturedStoriesView(generics.ListAPIView):
     def get_queryset(self):
         return Story.get_previous_featured_stories()
     serializer_class = StorySerializer
+
+class LikeCreateView(generics.CreateAPIView):
+    serializer_class = LikeSerializer
+
+    def post(self, request, *args, **kwargs):
+        comment_id = kwargs.get('comment_id')
+        comment = Comment.objects.get(pk=comment_id)
+        like, created = Like.objects.get_or_create(comment=comment, user=request.user if request.user.is_authenticated else None)
+        if not created:
+            return Response({"message": "You have already liked this comment."}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = LikeSerializer(like)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 # class UserCreateView(generics.CreateAPIView):
 #     queryset = User.objects.all()

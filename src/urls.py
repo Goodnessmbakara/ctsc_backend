@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     ContactUsView, StoryDetailView, StoryListView,PreviousFeaturedStoriesView,
-    CommentCreateView,ReplyCreateView, LatestFeaturedStoryView
+    CommentCreateView,ReplyCreateView, LatestFeaturedStoryView, LikeCreateView
 )
 
 urlpatterns = [
@@ -13,6 +13,7 @@ urlpatterns = [
     path('story/<str:story_id>/', StoryDetailView.as_view(), name = 'detail-story'),
     path('story/<str:story_id>/comment/', CommentCreateView.as_view(), name='comment-create'),
     path('comment/<int:comment_id>/reply/', ReplyCreateView.as_view(), name='reply-create'),
+    path('comment/<int:comment_id>/like/', LikeCreateView.as_view(), name='like-comment'),
 
 
     # User authentication and profile creation

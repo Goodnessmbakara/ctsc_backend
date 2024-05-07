@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .models import ContactUs, Story, Comment
+from .models import ContactUs, Story, Comment, Like
 
 User = get_user_model()
 
@@ -13,6 +13,11 @@ class ContactUsSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False, allow_null=True)
     replies = serializers.SerializerMethodField()
+    likes_count = serializers.SerializerMethodField()
+
+    def get_likes_count(self, obj):
+        likes = Like.objects.filter(pk = obj.id)
+        return likes.count()
 
     def get_replies(self, obj):
         replies = Comment.objects.filter(reply_to=obj)
@@ -20,7 +25,7 @@ class CommentSerializer(serializers.ModelSerializer):
         return serializer.data
     class Meta:
         model = Comment
-        fields = ['id', 'user', 'comment_body', 'replies']
+        fields = ['id', 'user', 'comment_body', 'replies', 'likes_count']
 
 
 class StorySerializer(serializers.ModelSerializer):
@@ -34,6 +39,10 @@ class StoryDetailSerializer(serializers.ModelSerializer):
         model = Story
         fields = '__all__'
 
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = '__all__'
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
