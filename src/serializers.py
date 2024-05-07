@@ -31,8 +31,10 @@ class StorySerializer(serializers.ModelSerializer):
         fields = ('story_id', 'topic', 'image', 'short_description', 'created_at', 'author')
 
 class StoryDetailSerializer(serializers.ModelSerializer):
-    model = Story
-    fields = '__all__'
+    comments = CommentSerializer(many=True, read_only=True)
+    class Meta:
+        model = Story
+        fields = '__all__'
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

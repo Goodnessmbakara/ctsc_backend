@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
-
+from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -64,6 +64,7 @@ class Newsletter(models.Model):
 class Story(models.Model):
     story_id = models.PositiveIntegerField(primary_key = True, unique = True)
     is_feature = models.BooleanField(default = False)
+    is_feature_date = models.DateTimeField(auto_now = True)
     created_at = models.DateTimeField(auto_now_add = True)
     topic = models.CharField(max_length = 100)
     author = models.ForeignKey(CustomUser, on_delete = models.DO_NOTHING, null = True, blank = True)
@@ -71,8 +72,12 @@ class Story(models.Model):
     short_description = models.CharField(max_length = 255)
     body = models.TextField()
 
-class FeaturedStory(models.Model):
-    story = models.OneToOneField('Story', on_delete=models.CASCADE)
+    #implement for save method incase of old stories that are made feature stories
+    # @classmethod
+    # def set_featured_date(self):
+    #     if self.is_feature:
+    #         if self.is_feature_date
+
 
 class Comment(models.Model):
     user = models.ForeignKey(CustomUser,null=True, on_delete=models.SET_NULL)
@@ -145,6 +150,12 @@ class TalentProfile(models.Model):
 
 class ClientProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete = models.CASCADE)
+
+class TeamMember(models.Model):
+    first_name = models.CharField(max_length = 50)
+    last_name = models.CharField(max_length = 50)
+    about = models.CharField(max_length = 100)
+    profile_image = models.ImageField(upload_to = 'team_member/')
 
 @receiver(post_save, sender=CustomUser)
 def create_profile(sender, instance, created, **kwargs):

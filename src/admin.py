@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, ContactUs, Newsletter, Story, FeaturedStory, Comment, Like, Event, Service, Message, Partner, JobOpportunity, JobApplication, TalentProfile, ClientProfile
+from .models import CustomUser, ContactUs, Newsletter, Story,  Comment, Like, Event, Service, Message, Partner, JobOpportunity, JobApplication, TalentProfile, ClientProfile
 
 # Custom admin classes for each model
 @admin.register(CustomUser)
@@ -23,11 +23,6 @@ class StoryAdmin(admin.ModelAdmin):
     list_display = ('story_id', 'topic', 'author', 'created_at', 'is_feature')
     search_fields = ('topic', 'author__email', 'author__first_name', 'author__last_name')
     list_filter = ('is_feature',)
-
-@admin.register(FeaturedStory)
-class FeaturedStoryAdmin(admin.ModelAdmin):
-    list_display = ('story',)
-    search_fields = ('story__topic',)
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):

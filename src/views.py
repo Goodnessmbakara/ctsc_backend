@@ -25,7 +25,7 @@ class StoryListView(generics.ListAPIView):
 
 class StoryDetailView(generics.ListAPIView):
     queryset = Story.objects.all()
-    serializer_class =  StorySerializer
+    serializer_class =  StoryDetailSerializer
     lookup_field = 'story_id'
 
 
