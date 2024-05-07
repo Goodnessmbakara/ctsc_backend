@@ -9,7 +9,7 @@ urlpatterns = [
     path('story/', StoryListView.as_view(), name = 'list-story'),
     path('story/<str:story_id>/', StoryDetailView.as_view(), name = 'detail-story'),
     path('story/<str:story_id>/comment/', CommentCreateView.as_view(), name='comment-create'),
-    path('comments/reply/', ReplyCreateView.as_view(), name='reply-create'),
+    path('comment/<int:comment_id>/reply/', ReplyCreateView.as_view(), name='reply-create'),
     # User authentication and profile creation
     # path('api/users/register/', UserCreateView.as_view(), name='user_register'),
     # path('api/users/profile/create/', ProfileCreateView.as_view(), name='user_profile_create'),

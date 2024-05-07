@@ -62,7 +62,7 @@ class Newsletter(models.Model):
     email_address = models.CharField(max_length=100)
 
 class Story(models.Model):
-    story_id = models.PositiveIntegerField(primary_key = True, unique = True)
+    story_id = models.AutoField(primary_key=True)
     is_feature = models.BooleanField(default = False)
     is_feature_date = models.DateTimeField(auto_now = True)
     created_at = models.DateTimeField(auto_now_add = True)

@@ -12,9 +12,16 @@ class ContactUsSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False, allow_null=True)
+    replies = serializers.SerializerMethodField()
+
+    def get_replies(self, obj):
+        replies = Comment.objects.filter(reply_to=obj)
+        serializer = CommentSerializer(replies, many=True)
+        return serializer.data
     class Meta:
         model = Comment
-        exclude = ['story']
+        fields = ['id', 'user', 'comment_body', 'replies']
+
 
 class StorySerializer(serializers.ModelSerializer):
     class Meta:

@@ -23,11 +23,13 @@ class CommentCreateView(generics.CreateAPIView):
 class ReplyCreateView(generics.CreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+
     def perform_create(self, serializer):
         comment_id = self.kwargs.get('comment_id')
+        parent_comment = get_object_or_404(Comment, pk=comment_id)
         serializer.save(
             user=self.request.user if self.request.user.is_authenticated else None,
-            reply_to_id=comment_id
+            reply_to=parent_comment, story_id =parent_comment.story_id
         )
 
 
