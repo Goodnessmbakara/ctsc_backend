@@ -80,9 +80,10 @@ class Story(models.Model):
 
 
 class Comment(models.Model):
+    story = models.ForeignKey(Story, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(CustomUser,null=True, on_delete=models.SET_NULL)
     comment_body = models.TextField()
-    parent_comment = models.ForeignKey("self", null=True, blank=True, on_delete = models.CASCADE)
+    reply_to = models.ForeignKey("self", null=True, blank=True, on_delete = models.CASCADE)
 
     def likes_count(self):
         self.likes.count()

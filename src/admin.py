@@ -26,7 +26,7 @@ class StoryAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('user', 'comment_body', 'parent_comment')
+    list_display = ('user', 'comment_body', 'reply_to')
     search_fields = ('user__email', 'comment_body')
 
 @admin.register(Like)

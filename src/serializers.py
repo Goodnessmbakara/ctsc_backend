@@ -10,20 +10,11 @@ class ContactUsSerializer(serializers.ModelSerializer):
         model = ContactUs
         fields = ('first_name', 'email_address', 'last_name', 'message')
 
-class CommentCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Comment
-        fields = ('user', 'comment_body', 'parent_comment')
-
-class ReplyCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Comment
-        fields = ('user', 'comment_body', 'parent_comment')
-
 class CommentSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False, allow_null=True)
     class Meta:
         model = Comment
-        fields = ('user', 'comment_body')
+        exclude = ['story']
 
 class StorySerializer(serializers.ModelSerializer):
     class Meta:

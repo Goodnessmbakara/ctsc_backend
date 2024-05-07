@@ -1,8 +1,9 @@
 from django.contrib.auth import get_user_model
 from rest_framework import generics
+from django.shortcuts import get_object_or_404
 from .models import ContactUs,Story,Comment
 from .serializers import (ContactUsSerializer, StoryDetailSerializer,StorySerializer,
-                          CommentCreateSerializer, ReplyCreateSerializer)
+                          CommentSerializer)
 User = get_user_model()
 
 
@@ -12,11 +13,22 @@ class ContactUsView(generics.CreateAPIView):
 
 class CommentCreateView(generics.CreateAPIView):
     queryset = Comment.objects.all()
-    serializer_class = CommentCreateSerializer
+    serializer_class = CommentSerializer
+
+    def perform_create(self, serializer):
+        story_id = self.kwargs.get('story_id')
+        story = get_object_or_404(Story,story_id = story_id)
+        serializer.save(user=self.request.user if self.request.user.is_authenticated else None, story=story)
 
 class ReplyCreateView(generics.CreateAPIView):
     queryset = Comment.objects.all()
-    serializer_class = ReplyCreateSerializer
+    serializer_class = CommentSerializer
+    def perform_create(self, serializer):
+        comment_id = self.kwargs.get('comment_id')
+        serializer.save(
+            user=self.request.user if self.request.user.is_authenticated else None,
+            reply_to_id=comment_id
+        )
 
 
 class StoryListView(generics.ListAPIView):
