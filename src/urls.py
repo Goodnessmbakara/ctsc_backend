@@ -1,15 +1,20 @@
 from django.urls import path
 from .views import (
-    ContactUsView, StoryDetailView, StoryListView,CommentCreateView,ReplyCreateView
+    ContactUsView, StoryDetailView, StoryListView,PreviousFeaturedStoriesView,
+    CommentCreateView,ReplyCreateView, LatestFeaturedStoryView
 )
 
 urlpatterns = [
     #contact us
     path('contact-us/',ContactUsView.as_view(), name ='contact-us'),
+    path('story/feature-story/', LatestFeaturedStoryView.as_view(), name = 'weekly-featured-story'),
+    path('story/previously-featured-stories/' ,PreviousFeaturedStoriesView.as_view(), name = 'all-featured-stories'),
     path('story/', StoryListView.as_view(), name = 'list-story'),
     path('story/<str:story_id>/', StoryDetailView.as_view(), name = 'detail-story'),
     path('story/<str:story_id>/comment/', CommentCreateView.as_view(), name='comment-create'),
     path('comment/<int:comment_id>/reply/', ReplyCreateView.as_view(), name='reply-create'),
+
+
     # User authentication and profile creation
     # path('api/users/register/', UserCreateView.as_view(), name='user_register'),
     # path('api/users/profile/create/', ProfileCreateView.as_view(), name='user_profile_create'),

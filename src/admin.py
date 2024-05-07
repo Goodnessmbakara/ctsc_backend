@@ -20,9 +20,9 @@ class NewsletterAdmin(admin.ModelAdmin):
 
 @admin.register(Story)
 class StoryAdmin(admin.ModelAdmin):
-    list_display = ('story_id', 'topic', 'author', 'created_at', 'is_feature')
+    list_display = ('story_id', 'topic', 'author', 'created_at', 'is_currently_featured')
     search_fields = ('topic', 'author__email', 'author__first_name', 'author__last_name')
-    list_filter = ('is_feature',)
+    list_filter = ('is_currently_featured',)
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):

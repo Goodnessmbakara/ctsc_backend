@@ -1,5 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import ContactUs,Story,Comment
 from .serializers import (ContactUsSerializer, StoryDetailSerializer,StorySerializer,
@@ -42,6 +45,23 @@ class StoryDetailView(generics.ListAPIView):
     serializer_class =  StoryDetailSerializer
     lookup_field = 'story_id'
 
+
+class LatestFeaturedStoryView(APIView):
+    def get(self, request, *args, **kwargs):
+        latest_featured_story = Story.get_latest_featured_story()
+        if latest_featured_story:
+            serializer = StorySerializer([latest_featured_story], many=True)  # Convert single object to list
+            return Response(serializer.data)
+        else:
+            return Response({"message": "No featured story found."}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+
+class PreviousFeaturedStoriesView(generics.ListAPIView):
+    def get_queryset(self):
+        return Story.get_previous_featured_stories()
+    serializer_class = StorySerializer
 
 # class UserCreateView(generics.CreateAPIView):
 #     queryset = User.objects.all()
