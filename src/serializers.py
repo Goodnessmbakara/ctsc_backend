@@ -1,9 +1,15 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .models import ContactUs, Story, Comment, Like
+from .models import (ContactUs, Story, Comment, Event,
+                     Like, Newsletter)
 
 User = get_user_model()
 
+
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = '__all__'
 
 class ContactUsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -43,6 +49,11 @@ class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
         fields = '__all__'
+
+class NewsLetterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Newsletter
+        fields = ('first_name', 'last_name', 'email_address')
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -52,28 +63,3 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
-
-# class ProfileSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Profile
-#         fields = '__all__'
-
-# class SkillCategorySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = SkillCategory
-#         fields = '__all__'
-
-# class SkillSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Skill
-#         fields = '__all__'
-
-# class JobOpportunitySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = JobOpportunity
-#         fields = '__all__'
-
-# class JobApplicationSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = JobApplication
-#         fields = '__all__'

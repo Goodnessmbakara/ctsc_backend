@@ -1,7 +1,8 @@
 from django.urls import path
 from .views import (
     ContactUsView, StoryDetailView, StoryListView,PreviousFeaturedStoriesView,
-    CommentCreateView,ReplyCreateView, LatestFeaturedStoryView, LikeCreateView
+    CommentCreateView,ReplyCreateView, LatestFeaturedStoryView, LikeCreateView, 
+    NewsLetterCreateView, EventView, SingleEventView
 )
 
 urlpatterns = [
@@ -14,7 +15,9 @@ urlpatterns = [
     path('story/<str:story_id>/comment/', CommentCreateView.as_view(), name='comment-create'),
     path('comment/<int:comment_id>/reply/', ReplyCreateView.as_view(), name='reply-create'),
     path('comment/<int:comment_id>/like/', LikeCreateView.as_view(), name='like-comment'),
-
+    path('newsletter/', NewsLetterCreateView.as_view(), name = 'subscribe-newsletter'),
+    #event endpoints
+    path('event/', EventView.as_view(), name = 'list-events')
 
     # User authentication and profile creation
     # path('api/users/register/', UserCreateView.as_view(), name='user_register'),

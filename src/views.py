@@ -4,11 +4,22 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from .models import ContactUs,Story,Comment, Like
-from .serializers import (ContactUsSerializer, StoryDetailSerializer,StorySerializer,
-                          CommentSerializer, LikeSerializer)
+from .models import ContactUs,Story,Comment, Like, Newsletter, Event
+from .serializers import (ContactUsSerializer, StoryDetailSerializer,
+                          StorySerializer,NewsLetterSerializer,
+                          CommentSerializer, LikeSerializer, EventSerializer)
 User = get_user_model()
 
+
+class EventView(generics.ListAPIView):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+
+
+class SingleEventView(generics.RetrieveAPIView):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+    lookup_field = 'event_id'
 
 class ContactUsView(generics.CreateAPIView):
     queryset = ContactUs.objects.all()
@@ -72,70 +83,15 @@ class LikeCreateView(generics.CreateAPIView):
         serializer = LikeSerializer(like)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-# class UserCreateView(generics.CreateAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
+class NewsLetterCreateView(APIView):
+    serializer_class = NewsLetterSerializer
+    queryset = Newsletter.objects.all()
+    
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        serializer = self.serializer_class(data = data)
+        if serializer.is_valid(raise_exception = True):
+            serializer.save()
+            return Response({'message: welcome to our newsletter. you have successfully been onboarded'} ,status = status.HTTP_201_CREATED)
 
-# class ProfileCreateView(generics.CreateAPIView):
-#     queryset = Profile.objects.all()
-#     serializer_class = ProfileSerializer
 
-# class SkillCategoryListView(generics.ListCreateAPIView):
-#     queryset = SkillCategory.objects.all()
-#     serializer_class = SkillCategorySerializer
-
-# class SkillListView(generics.ListCreateAPIView):
-#     queryset = Skill.objects.all()
-#     serializer_class = SkillSerializer
-
-# class JobOpportunityListView(generics.ListCreateAPIView):
-#     queryset = JobOpportunity.objects.all()
-#     serializer_class = JobOpportunitySerializer
-
-# class JobApplicationCreateView(generics.CreateAPIView):
-#     queryset = JobApplication.objects.all()
-#     serializer_class = JobApplicationSerializer
-
-# from rest_framework import generics
-# from .models import Author, Topic, Story, Interview, Comment, FeaturedStory, Newsletter, Event
-# from .serializers import AuthorSerializer, TopicSerializer, StorySerializer, InterviewSerializer, CommentSerializer, FeaturedStorySerializer, NewsletterSerializer, EventSerializer
-
-# class AuthorListView(generics.ListCreateAPIView):
-#     queryset = Author.objects.all()
-#     serializer_class = AuthorSerializer
-
-# class TopicListView(generics.ListCreateAPIView):
-#     queryset = Topic.objects.all()
-#     serializer_class = TopicSerializer
-
-# class StoryListView(generics.ListCreateAPIView):
-#     queryset = Story.objects.all()
-#     serializer_class = StorySerializer
-
-# class InterviewListView(generics.ListCreateAPIView):
-#     queryset = Interview.objects.all()
-#     serializer_class = InterviewSerializer
-
-# class CommentListView(generics.ListCreateAPIView):
-#     queryset = Comment.objects.all()
-#     serializer_class = CommentSerializer
-
-# class FeaturedStoryListView(generics.ListCreateAPIView):
-#     queryset = FeaturedStory.objects.all()
-#     serializer_class = FeaturedStorySerializer
-
-# class NewsletterListView(generics.ListCreateAPIView):
-#     queryset = Newsletter.objects.all()
-#     serializer_class = NewsletterSerializer
-
-# class EventListView(generics.ListCreateAPIView):
-#     queryset = Event.objects.all()
-#     serializer_class = EventSerializer
-
-# from rest_framework import generics
-# from .models import Category
-# from .serializers import CategorySerializer
-
-# class CategoryListView(generics.ListCreateAPIView):
-#     queryset = Category.objects.all()
-#     serializer_class = CategorySerializer
