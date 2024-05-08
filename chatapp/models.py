@@ -9,7 +9,7 @@ class Message(models.Model):
     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
     message_file = CloudinaryField('file', null=True, blank=True)
     image = CloudinaryField('image', null=True, blank=True)
-    text = models.TextField(blank=True)
+    text = models.TextField(blank=True, null=True)
     audio = CloudinaryField('audio', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank = True)
 
