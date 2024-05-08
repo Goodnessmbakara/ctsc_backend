@@ -3,7 +3,7 @@ from django.db import models
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
+from cloudinary.models import CloudinaryField
 
 
 
@@ -36,7 +36,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_client = models.BooleanField(default = False)
     is_talent = models.BooleanField(default = False)
-    profile_pics = models.ImageField(upload_to='profile_pics')
+    profile_pics = CloudinaryField('image', null=True, blank=True)
     address = models.CharField(max_length = 255)
     phone_number = models.CharField(max_length = 20)
 
@@ -111,7 +111,7 @@ class Like(models.Model):
         unique_together = ('comment', 'user')
 
 class Event(models.Model):
-    event_id = models.PositiveIntegerField(primary_key = True, unique = True)
+    event_id = models.AutoField(primary_key = True)
     event_image = models.ImageField(upload_to = 'event_images')
     event_name = models.CharField(max_length = 60)
     date = models.DateField()

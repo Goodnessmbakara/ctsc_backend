@@ -17,7 +17,9 @@ urlpatterns = [
     path('comment/<int:comment_id>/like/', LikeCreateView.as_view(), name='like-comment'),
     path('newsletter/', NewsLetterCreateView.as_view(), name = 'subscribe-newsletter'),
     #event endpoints
-    path('event/', EventView.as_view(), name = 'list-events')
+    path('event/<int:event_id>/', SingleEventView.as_view(), name = 'sngle-event'),
+    path('event/', EventView.as_view(), name = 'list-events'),
+    
 
     # User authentication and profile creation
     # path('api/users/register/', UserCreateView.as_view(), name='user_register'),
