@@ -126,17 +126,6 @@ class Service(models.Model):
     service_id = models.AutoField(primary_key = True)
     service_name = models.CharField(max_length = 50)
 
-class Message(models.Model):
-    sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='sent_messages')
-    recipient = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='received_messages')
-    message_file = CloudinaryField('file', null=True, blank=True)
-    image = CloudinaryField('image', null=True, blank=True)
-    text = models.TextField(blank=True)
-    audio = CloudinaryField('audio', null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True, null=True, blank = True)
-
-    def __str__(self):
-        return f"Message from {self.sender} to {self.recipient}"
 class Partner(models.Model):
     partner_pics = CloudinaryField('image', null=True, blank=True)
     name = models.CharField(max_length = 50)

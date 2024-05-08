@@ -1,6 +1,6 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
-
+from .models import Message
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = 'chat_room'

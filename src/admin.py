@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, ContactUs, Newsletter, Story,  Comment, Like, Event, Service, Message, Partner, JobOpportunity, JobApplication, TalentProfile, ClientProfile
+from .models import CustomUser, ContactUs, Newsletter, Story,  Comment, Like, Event, Service, Partner, JobOpportunity, JobApplication, TalentProfile, ClientProfile
 
 # Custom admin classes for each model
 @admin.register(CustomUser)
@@ -43,10 +43,6 @@ class EventAdmin(admin.ModelAdmin):
 class ServiceAdmin(admin.ModelAdmin):
     list_display = ('service_id', 'service_name')
 
-@admin.register(Message)
-class MessageAdmin(admin.ModelAdmin):
-    list_display = ('sender', 'recipient', 'text')
-    search_fields = ('sender__email', 'recipient__email', 'text')
 
 @admin.register(Partner)
 class PartnerAdmin(admin.ModelAdmin):
