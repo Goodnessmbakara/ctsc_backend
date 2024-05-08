@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     ContactUsView, StoryDetailView, StoryListView,PreviousFeaturedStoriesView,
     CommentCreateView,ReplyCreateView, LatestFeaturedStoryView, LikeCreateView, 
-    NewsLetterCreateView, EventView, SingleEventView
+    NewsLetterCreateView, EventView, SingleEventView, ServiceDetailView, ServiceListView,CustomTokenObtainPairView, CustomTokenRefreshView, SignOutView, SignUpView
 )
 
 urlpatterns = [
@@ -19,8 +19,16 @@ urlpatterns = [
     #event endpoints
     path('event/<int:event_id>/', SingleEventView.as_view(), name = 'sngle-event'),
     path('event/', EventView.as_view(), name = 'list-events'),
-    
 
+    #service endpoints
+    path('service/', ServiceListView.as_view(), name = 'list-services'),
+    path('service/<int:service_id>/', ServiceDetailView.as_view(), name = 'single-service'),
+    
+    #auth endpoints
+    path('sign-in/', CustomTokenObtainPairView.as_view(), name='sign-in'),
+    path('token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
+    path('sign-out/', SignOutView.as_view(), name='sign_out'),
+    path('sign-up/', SignUpView.as_view(), name='sign_up'),
     # User authentication and profile creation
     # path('api/users/register/', UserCreateView.as_view(), name='user_register'),
     # path('api/users/profile/create/', ProfileCreateView.as_view(), name='user_profile_create'),

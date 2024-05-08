@@ -1,11 +1,42 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import (ContactUs, Story, Comment, Event,
-                     Like, Newsletter)
+                     Like, Newsletter, Service)
 
 User = get_user_model()
 
 
+class SignUpSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ['email', 'password', 'first_name', 'last_name', 'address', 'phone_number', 'is_client', 'is_talent']
+
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            email=validated_data['email'],
+            password=validated_data['password'],
+            first_name=validated_data.get('first_name', ''),
+            last_name=validated_data.get('last_name', ''),
+            address=validated_data.get('address', ''),
+            phone_number=validated_data.get('phone_number', ''),
+            is_client=validated_data.get('is_client', False),
+            is_talent=validated_data.get('is_talent', False)
+        )
+        return user
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        return token
+
+class ServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Service
+        fields = ['service_id', 'service_name']
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event

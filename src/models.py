@@ -123,7 +123,7 @@ class Event(models.Model):
     end_time = models. DateTimeField()
 
 class Service(models.Model):
-    service_id = models.PositiveIntegerField(primary_key = True, unique = True)
+    service_id = models.AutoField(primary_key = True)
     service_name = models.CharField(max_length = 50)
 
 class Message(models.Model):
