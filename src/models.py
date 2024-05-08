@@ -133,7 +133,7 @@ class Message(models.Model):
     image = CloudinaryField('image', null=True, blank=True)
     text = models.TextField(blank=True)
     audio = CloudinaryField('audio', null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank = True)
 
     def __str__(self):
         return f"Message from {self.sender} to {self.recipient}"
