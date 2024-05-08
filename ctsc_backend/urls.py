@@ -23,6 +23,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 
+from channels.routing import ProtocolTypeRouter, URLRouter
+from chatapp import routing as chatsocket_routing
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -41,8 +43,15 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('supersecret/', admin.site.urls),
     path('api/v1/', include('src.urls')),
+    path('api/v1/', include('chatapp.urls')),
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+application = ProtocolTypeRouter({
+    'websocket': URLRouter(
+        chatsocket_routing.websocket_urlpatterns
+    ),
+})

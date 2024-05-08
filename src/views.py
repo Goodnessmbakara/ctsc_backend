@@ -67,7 +67,6 @@ class EventView(generics.ListAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
 
-
 class SingleEventView(generics.RetrieveAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
@@ -97,7 +96,6 @@ class ReplyCreateView(generics.CreateAPIView):
             user=self.request.user if self.request.user.is_authenticated else None,
             reply_to=parent_comment, story_id =parent_comment.story_id
         )
-
 
 class StoryListView(generics.ListAPIView):
     queryset = Story.objects.all()

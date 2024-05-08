@@ -112,7 +112,7 @@ class Like(models.Model):
 
 class Event(models.Model):
     event_id = models.AutoField(primary_key = True)
-    event_image = models.ImageField(upload_to = 'event_images')
+    event_image = CloudinaryField('image', null=True, blank=True)
     event_name = models.CharField(max_length = 60)
     date = models.DateField()
     location = models.CharField(max_length = 255)
@@ -127,14 +127,18 @@ class Service(models.Model):
     service_name = models.CharField(max_length = 50)
 
 class Message(models.Model):
-    sender = models.ForeignKey(CustomUser, on_delete = models.DO_NOTHING, related_name = 'sender')
-    recipient  = models.ForeignKey(CustomUser, on_delete = models.DO_NOTHING, related_name = 'receiver')
-    message_file = models.FileField(null = True, blank =True)
-    image = models.ImageField(null = True, blank =True)
-    text = models.TextField(null = True, blank =True)
+    sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='sent_messages')
+    recipient = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='received_messages')
+    message_file = CloudinaryField('file', null=True, blank=True)
+    image = CloudinaryField('image', null=True, blank=True)
+    text = models.TextField(blank=True)
+    audio = CloudinaryField('audio', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"Message from {self.sender} to {self.recipient}"
 class Partner(models.Model):
-    partner_pics = models.ImageField()
+    partner_pics = CloudinaryField('image', null=True, blank=True)
     name = models.CharField(max_length = 50)
     description = models.TextField()
 
@@ -159,7 +163,7 @@ class JobApplication(models.Model):
 
 class TalentProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
+    profile_picture = CloudinaryField('image', blank=True, null=True)
     address = models.CharField(max_length=200, blank=True, null=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
 
