@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     ContactUsView, StoryDetailView, StoryListView,PreviousFeaturedStoriesView,
-    CommentCreateView,ReplyCreateView, LatestFeaturedStoryView, LikeCreateView, 
+    CommentCreateView,ReplyCreateView, LatestFeaturedStoryView, LikeCreateView, UserProfileView,
     NewsLetterCreateView, EventView, SingleEventView, ServiceDetailView, ServiceListView,CustomTokenObtainPairView, CustomTokenRefreshView, SignOutView, SignUpView
 )
 
@@ -29,24 +29,7 @@ urlpatterns = [
     path('token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
     path('sign-out/', SignOutView.as_view(), name='sign_out'),
     path('sign-up/', SignUpView.as_view(), name='sign_up'),
-    # User authentication and profile creation
-    # path('api/users/register/', UserCreateView.as_view(), name='user_register'),
-    # path('api/users/profile/create/', ProfileCreateView.as_view(), name='user_profile_create'),
-
-    # # Skill and category management
-    # path('api/skills/', SkillListView.as_view(), name='skill_list'),
-    # path('api/categories/', CategoryListView.as_view(), name='category_list'),
-
-    # # Job opportunities
-    # path('api/jobs/', JobOpportunityListView.as_view(), name='job_opportunity_list'),
-
-    # # Other models
-    # path('api/authors/', AuthorListView.as_view(), name='author_list'),
-    # path('api/topics/', TopicListView.as_view(), name='topic_list'),
-    # path('api/stories/', StoryListView.as_view(), name='story_list'),
-    # path('api/interviews/', InterviewListView.as_view(), name='interview_list'),
-    # path('api/comments/', CommentListView.as_view(), name='comment_list'),
-    # path('api/featured-stories/', FeaturedStoryListView.as_view(), name='featured_story_list'),
-    # path('api/newsletters/', NewsletterListView.as_view(), name='newsletter_list'),
-    # path('api/events/', EventListView.as_view(), name='event_list'),
+    
+    #user endpoints
+    path('user-profile/', UserProfileView.as_view(), name='user_profile'),
 ]

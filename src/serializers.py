@@ -7,6 +7,12 @@ from .models import (ContactUs, Story, Comment, Event,
 User = get_user_model()
 
 
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'first_name', 'last_name', 'address', 'phone_number', 'is_talent', 'profile_pics']
+
 class SignUpSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 

@@ -6,15 +6,24 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 
 from .models import (ContactUs,Story,Comment,Service,
                      Like, Newsletter, Event)
 from .serializers import (ContactUsSerializer, StoryDetailSerializer,
-                          StorySerializer,NewsLetterSerializer, 
+                          StorySerializer,NewsLetterSerializer, UserProfileSerializer,
                           ServiceSerializer,SignUpSerializer, CustomTokenObtainPairSerializer,
                           CommentSerializer, LikeSerializer, EventSerializer)
 User = get_user_model()
+
+class UserProfileView(generics.RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
