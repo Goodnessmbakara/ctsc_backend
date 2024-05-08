@@ -44,6 +44,11 @@ class ServiceSerializer(serializers.ModelSerializer):
         model = Service
         fields = ['service_id', 'service_name']
 class EventSerializer(serializers.ModelSerializer):
+    
+    event_image = serializers.SerializerMethodField()
+    
+    def get_event_image(self, obj):
+        return self.context['request'].build_absolute_uri(obj.event_image.url)
     class Meta:
         model = Event
         fields = '__all__'
