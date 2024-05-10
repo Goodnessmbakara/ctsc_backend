@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, ContactUs, Newsletter, Story,  Comment, Like, Event, Service, Partner, JobOpportunity, JobApplication, TalentProfile, ClientProfile
+from .models import CustomUser, ContactUs, Newsletter, Event, Service, Partner, TalentProfile, ClientProfile
 
 # Custom admin classes for each model
 @admin.register(CustomUser)
@@ -18,21 +18,7 @@ class NewsletterAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'email_address')
     search_fields = ('first_name', 'last_name', 'email_address')
 
-@admin.register(Story)
-class StoryAdmin(admin.ModelAdmin):
-    list_display = ('story_id', 'topic', 'author', 'created_at', 'is_currently_featured')
-    search_fields = ('topic', 'author__email', 'author__first_name', 'author__last_name')
-    list_filter = ('is_currently_featured',)
 
-@admin.register(Comment)
-class CommentAdmin(admin.ModelAdmin):
-    list_display = ('user', 'comment_body', 'reply_to')
-    search_fields = ('user__email', 'comment_body')
-
-@admin.register(Like)
-class LikeAdmin(admin.ModelAdmin):
-    list_display = ('user', 'comment')
-    search_fields = ('user__email',)
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
@@ -49,15 +35,6 @@ class PartnerAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
 
-@admin.register(JobOpportunity)
-class JobOpportunityAdmin(admin.ModelAdmin):
-    list_display = ('category', 'title', 'hiring_company', 'tag')
-    search_fields = ('title', 'hiring_company', 'tag')
-
-@admin.register(JobApplication)
-class JobApplicationAdmin(admin.ModelAdmin):
-    list_display = ('job_opportunity', 'talent', 'applied_date')
-    search_fields = ('job_opportunity__title', 'talent__user__email')
 
 @admin.register(TalentProfile)
 class TalentProfileAdmin(admin.ModelAdmin):

@@ -44,14 +44,10 @@ urlpatterns = [
     path('supersecret/', admin.site.urls),
     path('api/v1/', include('src.urls')),
     path('api/v1/', include('chatapp.urls')),
+    path('api/v1/', include('job.urls')),
+    path('api/v1/', include('story.urls')),
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-application = ProtocolTypeRouter({
-    'websocket': URLRouter(
-        chatsocket_routing.websocket_urlpatterns
-    ),
-})

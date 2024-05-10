@@ -1,12 +1,19 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import (ContactUs, Story, Comment, Event,
-                     Like, Newsletter, Service)
+from .models import (ContactUs,  Event,Partner,
+                     Newsletter, Service)
 
 User = get_user_model()
 
+class PartnerSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
 
+    def get_image(self, obj):
+        return self.context['request'].build_absolute_uri(obj.image.url)
+    class Meta:
+        model = Partner
+        fields = ('id', 'image', 'description')
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,9 +51,9 @@ class ServiceSerializer(serializers.ModelSerializer):
         model = Service
         fields = ['service_id', 'service_name']
 class EventSerializer(serializers.ModelSerializer):
-    
+
     event_image = serializers.SerializerMethodField()
-    
+
     def get_event_image(self, obj):
         return self.context['request'].build_absolute_uri(obj.event_image.url)
     class Meta:
@@ -57,40 +64,6 @@ class ContactUsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactUs
         fields = ('first_name', 'email_address', 'last_name', 'message')
-
-class CommentSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False, allow_null=True)
-    replies = serializers.SerializerMethodField()
-    likes_count = serializers.SerializerMethodField()
-
-    def get_likes_count(self, obj):
-        likes = Like.objects.filter(pk = obj.id)
-        return likes.count()
-
-    def get_replies(self, obj):
-        replies = Comment.objects.filter(reply_to=obj)
-        serializer = CommentSerializer(replies, many=True)
-        return serializer.data
-    class Meta:
-        model = Comment
-        fields = ['id', 'user', 'comment_body', 'replies', 'likes_count']
-
-
-class StorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Story
-        fields = ('story_id', 'topic', 'image', 'short_description', 'created_at', 'author')
-
-class StoryDetailSerializer(serializers.ModelSerializer):
-    comments = CommentSerializer(many=True, read_only=True)
-    class Meta:
-        model = Story
-        fields = '__all__'
-
-class LikeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Like
-        fields = '__all__'
 
 class NewsLetterSerializer(serializers.ModelSerializer):
     class Meta:

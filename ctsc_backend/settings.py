@@ -49,7 +49,9 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
-    'chatapp'
+    'chatapp',
+    'job',
+    'story'
 ]
 
 MIDDLEWARE = [
@@ -167,4 +169,10 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
+}
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',  # Use InMemoryChannelLayer for development
+    },
 }
