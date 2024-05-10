@@ -50,6 +50,11 @@ class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
         fields = ['service_id', 'service_name']
+
+class ServiceDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Service
+        fields = ['service_id', 'service_name', 'talent_profiles']
 class EventSerializer(serializers.ModelSerializer):
 
     event_image = serializers.SerializerMethodField()

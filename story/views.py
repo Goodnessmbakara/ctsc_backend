@@ -9,6 +9,19 @@ from rest_framework import status
 from .models import Comment, Like, Story
 
 from .serializers import (StoryDetailSerializer,StorySerializer,CommentSerializer, LikeSerializer,)
+
+
+class PersonalGrowthStoryView(generics.ListAPIView):
+    queryset = Story.objects.filter(is_approved = True, is_anonymous = False, tags = 'Personal Growth')
+    serializer_class = StorySerializer
+
+class CulturalStoryView(generics.ListAPIView):
+    queryset = Story.objects.filter(is_approved = True, is_anonymous = False, tags = 'Culture')
+    serializer_class = StorySerializer
+
+class InterviewStoryView(generics.ListAPIView):
+    queryset = Story.objects.filter(is_approved = True, is_anonymous = False, tags = 'Interview')
+    serializer_class = StorySerializer
 class CommentCreateView(generics.CreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer

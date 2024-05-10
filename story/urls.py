@@ -1,11 +1,14 @@
 from django.urls import path
 
-from .views import (StoryDetailView, StoryListView,
+from .views import (StoryDetailView, StoryListView,PersonalGrowthStoryView, CulturalStoryView,InterviewStoryView,
                     PreviousFeaturedStoriesView,CreateListAnonymousStoryView,
     CommentCreateView,ReplyCreateView, LatestFeaturedStoryView, LikeCreateView)
 
 
 urlpatterns = [
+    path('story/culture/', CulturalStoryView.as_view(), name  = 'cultural-story'),
+    path('story/personal-growth/', PersonalGrowthStoryView.as_view(), name  = 'personal-story'),
+    path('story/interview/', InterviewStoryView.as_view(), name  = 'interview-story'),
     path('anonymous-story/', CreateListAnonymousStoryView.as_view(), name = 'anonymous-story'),
     path('story/feature-story/', LatestFeaturedStoryView.as_view(), name = 'weekly-featured-story'),
     path('story/previously-featured-stories/' ,PreviousFeaturedStoriesView.as_view(), name = 'all-featured-stories'),

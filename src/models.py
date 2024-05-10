@@ -88,6 +88,12 @@ class TalentProfile(models.Model):
     profile_picture = CloudinaryField('image', blank=True, null=True)
     address = models.CharField(max_length=200, blank=True, null=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
+    services = models.ManyToManyField(Service, related_name='talent_profiles')
+    cv_document = CloudinaryField('file', blank=True, null=True)
+    work_experiences = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.user.first_name
 
 class ClientProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete = models.CASCADE)
