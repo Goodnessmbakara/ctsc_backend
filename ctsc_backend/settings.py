@@ -139,4 +139,3 @@ def configure_cloudinary():
 
 configure_cloudinary()
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
