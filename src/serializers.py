@@ -2,10 +2,15 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import (ContactUs,  Event,Partner, TalentProfile,
-                     Newsletter, Service)
+                     Newsletter, Service, TeamMember)
 
 User = get_user_model()
 
+
+class TeamMemberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TeamMember
+        fields = '__all__'
 class PartnerSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
 
@@ -27,16 +32,28 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 class TalentProfileSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = serializers.SerializerMethodField()
     
     profile_picture = serializers.SerializerMethodField()
     cv_document = serializers.SerializerMethodField()
     
+    def get_user(self, obj):
+        user = obj.user
+        return {
+            'id': user.id,
+            'firstname': user.first_name,
+            'lastname': user.last_name,
+            'email': user.email,
+            # Add other user fields as needed
+            # Include other user fields you need in the response
+        }
+
     def get_profile_picture(self, obj):
-        return self.context['request'].build_absolute_uri(obj.profile_picture.url)
-    
+        if obj.profile_picture:
+            return self.context['request'].build_absolute_uri(obj.profile_picture.url)
     def get_cv_document(self, obj):
-        return self.context['request'].build_absolute_uri(obj.cv_document.url)
+        if obj.cv_document:
+            return self.context['request'].build_absolute_uri(obj.cv_document.url)
     class Meta:
         model = TalentProfile
         fields = ['user', 'address', 'phone_number','profile_picture', 'cv_document', 'work_experiences']

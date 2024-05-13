@@ -11,15 +11,21 @@ from django.shortcuts import get_object_or_404
 
 from .models import (
     ContactUs,Service,Partner,TalentProfile,ClientProfile,
-    Newsletter, Event)
+    Newsletter, Event, TeamMember)
 from .serializers import (
     ContactUsSerializer,PartnerSerializer,ServiceDetailSerializer,
     NewsLetterSerializer, TalentProfileSerializer,ClientProfileSerializer,
     ServiceSerializer,SignUpSerializer, CustomTokenObtainPairSerializer,
-     EventSerializer)
+     EventSerializer, TeamMemberSerializer)
 User = get_user_model()
 
-
+class TeamMemberView(APIView):
+    serializer_class = TeamMemberSerializer
+    def get(self,request, format=None):
+        members = TeamMember.objects.all()
+        serializer = self.serializer_class(data = members, many =True)
+        return Response(serializer.data, status = status.HTTP_200_OK)
+    
 class PartnerListView(generics.ListAPIView):
     queryset = Partner.objects.all()
     serializer_class = PartnerSerializer
@@ -51,6 +57,28 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
         elif user.is_talent:
             return TalentProfileSerializer
         return super().get_serializer_class()
+
+    def put(self, request, *args, **kwargs):
+        user = request.user
+        profile = self.get_object()
+
+        # Update user fields
+        
+        user_data = request.data.get('user', {})
+        user.first_name = user_data.get('first_name', user.first_name)
+        user.last_name = user_data.get('last_name', user.last_name)
+        user.email = user_data.get('email', user.email)
+        user.save()
+
+        # Update profile fields
+        profile_data = request.data.get('profile', {})
+        profile.address = profile_data.get('address', profile.address)
+        profile.phone_number = profile_data.get('phone_number', profile.phone_number)
+        # Update other profile fields as needed
+        profile.save()
+
+        return Response({'message': 'Profile updated successfully'}, status=status.HTTP_200_OK)
+
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
