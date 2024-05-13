@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import (ContactUs,  Event,Partner,
+from .models import (ContactUs,  Event,Partner, TalentProfile,
                      Newsletter, Service)
 
 User = get_user_model()
@@ -15,17 +15,32 @@ class PartnerSerializer(serializers.ModelSerializer):
         model = Partner
         fields = ('id', 'image', 'description')
 
-class UserProfileSerializer(serializers.ModelSerializer):
+class TalentProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['id', 'email', 'first_name', 'last_name', 'address', 'phone_number', 'is_talent', 'profile_pics']
+        model = TalentProfile
+        fields = ['id', 'first_name', 'last_name', 'address', 'phone_number', 'is_talent', 'profile_picture', 'cv_document', 'work_experiences']
 
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
+class ClientProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TalentProfile
+        fields = ['id', 'first_name', 'last_name', 'address', 'phone_number', 'is_client', 'profile_picture']
+
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
 class SignUpSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ['email', 'password', 'first_name', 'last_name', 'address', 'phone_number', 'is_client', 'is_talent']
+        fields = ['email', 'password', 'first_name', 'last_name', 'is_client', 'is_talent']
 
     def create(self, validated_data):
         user = User.objects.create_user(
@@ -33,8 +48,6 @@ class SignUpSerializer(serializers.ModelSerializer):
             password=validated_data['password'],
             first_name=validated_data.get('first_name', ''),
             last_name=validated_data.get('last_name', ''),
-            address=validated_data.get('address', ''),
-            phone_number=validated_data.get('phone_number', ''),
             is_client=validated_data.get('is_client', False),
             is_talent=validated_data.get('is_talent', False)
         )
@@ -52,6 +65,7 @@ class ServiceSerializer(serializers.ModelSerializer):
         fields = ['service_id', 'service_name']
 
 class ServiceDetailSerializer(serializers.ModelSerializer):
+    talent_profiles = TalentProfileSerializer(many=True)
     class Meta:
         model = Service
         fields = ['service_id', 'service_name', 'talent_profiles']

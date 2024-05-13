@@ -10,11 +10,11 @@ from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 
 from .models import (
-    ContactUs,Service,Partner,
+    ContactUs,Service,Partner,TalentProfile,ClientProfile,
     Newsletter, Event)
 from .serializers import (
-    ContactUsSerializer,PartnerSerializer,
-    NewsLetterSerializer, UserProfileSerializer,
+    ContactUsSerializer,PartnerSerializer,ServiceDetailSerializer,
+    NewsLetterSerializer, TalentProfileSerializer,ClientProfileSerializer,
     ServiceSerializer,SignUpSerializer, CustomTokenObtainPairSerializer,
      EventSerializer)
 User = get_user_model()
@@ -30,12 +30,27 @@ class PartnerDetailView(generics.RetrieveAPIView):
 
 
 class UserProfileView(generics.RetrieveUpdateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserProfileSerializer
+    serializer_class = TalentProfileSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_client:
+            return ClientProfile.objects.filter(user=user)
+        elif user.is_talent:
+            return TalentProfile.objects.filter(user=user)
+        return super().get_queryset()  # Default queryset if user is not client or talent
+
     def get_object(self):
-        return self.request.user
+        return self.get_queryset().get()
+
+    def get_serializer_class(self):
+        user = self.request.user
+        if user.is_client:
+            return ClientProfileSerializer
+        elif user.is_talent:
+            return TalentProfileSerializer
+        return super().get_serializer_class()
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
@@ -47,7 +62,7 @@ class SignUpView(generics.CreateAPIView):
     serializer_class = SignUpSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(data=request.data, context= {'request':request})
         if serializer.is_valid():
             serializer.save()
             return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
@@ -72,8 +87,8 @@ class ServiceListView(generics.ListAPIView):
     pagination_class = CustomServicePagination
 
 class ServiceDetailView(generics.RetrieveAPIView):
-    serializer_class = ServiceSerializer
-    queryset = Service.objects.all()
+    serializer_class = ServiceDetailSerializer
+    queryset = Service.objects.prefetch_related('talent_profiles')
     lookup_field = 'service_id'
 class EventView(generics.ListAPIView):
     queryset = Event.objects.all()
@@ -91,9 +106,11 @@ class ContactUsView(generics.CreateAPIView):
 class NewsLetterCreateView(APIView):
     serializer_class = NewsLetterSerializer
     queryset = Newsletter.objects.all()
-    
+
     def post(self, request, *args, **kwargs):
         data = request.data
+        if Newsletter.objects.filter(email_address=data['email_address']).exists():
+            return Response({'message: This User is already Subscribed to our Newsletter'} ,status = status.HTTP_400_BAD_REQUEST)
         serializer = self.serializer_class(data = data)
         if serializer.is_valid(raise_exception = True):
             serializer.save()

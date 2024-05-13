@@ -36,9 +36,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_client = models.BooleanField(default = False)
     is_talent = models.BooleanField(default = False)
-    profile_pics = CloudinaryField('image', null=True, blank=True)
-    address = models.CharField(max_length = 255)
-    phone_number = models.CharField(max_length = 20)
 
 
     objects = CustomUserManager()
@@ -97,12 +94,15 @@ class TalentProfile(models.Model):
 
 class ClientProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete = models.CASCADE)
+    profile_picture = CloudinaryField('image', null=True, blank=True)
+    address = models.CharField(max_length = 255, null=True, blank=True)
+    phone_number = models.CharField(max_length = 20, null=True, blank=True)
 
 class TeamMember(models.Model):
     first_name = models.CharField(max_length = 50)
     last_name = models.CharField(max_length = 50)
     about = models.CharField(max_length = 100)
-    profile_image = models.ImageField(upload_to = 'team_member/')
+    profile_image = CloudinaryField('image')
 
 @receiver(post_save, sender=CustomUser)
 def create_profile(sender, instance, created, **kwargs):
