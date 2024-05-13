@@ -75,6 +75,10 @@ class Service(models.Model):
     service_id = models.AutoField(primary_key = True)
     service_name = models.CharField(max_length = 50)
 
+    def __str__(self):
+        return self.service_name
+
+
 class Partner(models.Model):
     partner_pics = CloudinaryField('image', null=True, blank=True)
     name = models.CharField(max_length = 50)

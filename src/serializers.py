@@ -15,10 +15,31 @@ class PartnerSerializer(serializers.ModelSerializer):
         model = Partner
         fields = ('id', 'image', 'description')
 
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name', 'email', 'password')
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
+
 class TalentProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    
+    profile_picture = serializers.SerializerMethodField()
+    cv_document = serializers.SerializerMethodField()
+    
+    def get_profile_picture(self, obj):
+        return self.context['request'].build_absolute_uri(obj.profile_picture.url)
+    
+    def get_cv_document(self, obj):
+        return self.context['request'].build_absolute_uri(obj.cv_document.url)
     class Meta:
         model = TalentProfile
-        fields = ['id', 'first_name', 'last_name', 'address', 'phone_number', 'is_talent', 'profile_picture', 'cv_document', 'work_experiences']
+        fields = ['user', 'address', 'phone_number','profile_picture', 'cv_document', 'work_experiences']
 
     def update(self, instance, validated_data):
         for attr, value in validated_data.items():
@@ -88,12 +109,3 @@ class NewsLetterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Newsletter
         fields = ('first_name', 'last_name', 'email_address')
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'username', 'email', 'password')
-        extra_kwargs = {'password': {'write_only': True}}
-
-    def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        return user
