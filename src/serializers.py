@@ -30,13 +30,17 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'first_name', 'last_name', 'is_client', 'is_talent']
 
 class TalentProfileSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
-    
+
     profile_picture = serializers.SerializerMethodField()
     cv_document = serializers.SerializerMethodField()
-    
+
     def get_user(self, obj):
         user = obj.user
         return {

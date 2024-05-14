@@ -1,49 +1,65 @@
 from django.contrib import admin
-from .models import CustomUser, ContactUs, Newsletter, Event, Service, Partner, TalentProfile, ClientProfile
+from django.db import models
+from django.contrib.auth.admin import UserAdmin
+from .models import CustomUser, ContactUs, Newsletter, Event, Service, Partner, TalentProfile, ClientProfile, TeamMember
 
-# Custom admin classes for each model
-@admin.register(CustomUser)
-class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('email', 'first_name', 'last_name', 'is_staff', 'is_active')
-    search_fields = ('email', 'first_name', 'last_name')
+# Custom admin for CustomUser
+class CustomUserAdmin(UserAdmin):
+    model = CustomUser
+    list_display = ('email', 'first_name', 'last_name', 'is_active', 'is_staff', 'is_client', 'is_talent')
     list_filter = ('is_staff', 'is_active', 'is_client', 'is_talent')
-
-@admin.register(ContactUs)
-class ContactUsAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'email_address', 'message')
-    search_fields = ('first_name', 'last_name', 'email_address')
-
-@admin.register(Newsletter)
-class NewsletterAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'email_address')
-    search_fields = ('first_name', 'last_name', 'email_address')
-
-
-
-@admin.register(Event)
-class EventAdmin(admin.ModelAdmin):
-    list_display = ('event_id', 'event_name', 'date', 'location', 'start_time', 'end_time')
-    search_fields = ('event_name', 'location')
-
-@admin.register(Service)
-class ServiceAdmin(admin.ModelAdmin):
-    list_display = ('service_id', 'service_name')
+    fieldsets = (
+        (None, {'fields': ('email', 'password')}),
+        ('Personal Info', {'fields': ('first_name', 'last_name')}),
+        ('Permissions', {'fields': ('is_staff', 'is_active', 'is_client', 'is_talent')}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'password1', 'password2', 'is_staff', 'is_active', 'is_client', 'is_talent'),
+        }),
+    )
+    search_fields = ('email', 'first_name', 'last_name')
+    ordering = ('email',)
 
 
-@admin.register(Partner)
-class PartnerAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    search_fields = ('name',)
 
+# Custom managers for TalentProfile and ClientProfile
+class TalentProfileManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related('user')
 
+class ClientProfileManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related('user')
+
+# Model admins for TalentProfile and ClientProfile
 @admin.register(TalentProfile)
 class TalentProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'address', 'phone_number')
+    list_display = ('user_email', 'address', 'phone_number')
     search_fields = ('user__email', 'address', 'phone_number')
+    list_filter = ('services',)
+
+    def user_email(self, obj):
+        return obj.user.email
+
+    user_email.admin_order_field = 'user__email'
 
 @admin.register(ClientProfile)
 class ClientProfileAdmin(admin.ModelAdmin):
-    list_display = ('user',)
-    search_fields = ('user__email',)
+    list_display = ('user_email', 'address', 'phone_number')
+    search_fields = ('user__email', 'address', 'phone_number')
 
-# You can continue to register admins for other models similarly
+    def user_email(self, obj):
+        return obj.user.email
+
+    user_email.admin_order_field = 'user__email'
+
+# Register models with their respective admins
+admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(ContactUs)
+admin.site.register(Newsletter)
+admin.site.register(Event)
+admin.site.register(Service)
+admin.site.register(Partner)
+admin.site.register(TeamMember)

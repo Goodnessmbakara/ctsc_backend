@@ -110,8 +110,23 @@ class TeamMember(models.Model):
 
 @receiver(post_save, sender=CustomUser)
 def create_profile(sender, instance, created, **kwargs):
-    if created:  # Only execute if a new instance is created
+    if created and not instance.is_staff:  # Only execute for non-staff users
         if instance.is_client:
             ClientProfile.objects.create(user=instance)
         else:
             TalentProfile.objects.create(user=instance)
+    elif not created:  # Update profile if user is not new
+        try:
+            if instance.is_client:
+                profile = instance.clientprofile
+            else:
+                profile = instance.talentprofile
+            # Update profile fields if needed
+            profile.save()
+        except ClientProfile.DoesNotExist:
+            if instance.is_client:
+                ClientProfile.objects.create(user=instance)
+        except TalentProfile.DoesNotExist:
+            if not instance.is_client:
+                TalentProfile.objects.create(user=instance)
+

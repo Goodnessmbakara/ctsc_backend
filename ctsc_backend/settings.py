@@ -72,17 +72,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ctsc_backend.wsgi.application'
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 # Replace the SQLite DATABASES configuration with PostgreSQL:
-DATABASES = {
-    'default':
-        dj_database_url.config(default='postgres://ctsc_db_user:99ajy8MdxbnDsm2LhAqFneP8MDIlSWXB@dpg-cp0u4lvsc6pc7382b8c0-a.oregon-postgres.render.com/ctsc_db', conn_max_age=600)}
+# DATABASES = {
+#     'default':
+#         dj_database_url.config(
+#             default='postgres://ctsc_db_user:99ajy8MdxbnDsm2LhAqFneP8MDIlSWXB@dpg-cp0u4lvsc6pc7382b8c0-a.oregon-postgres.render.com/ctsc_db',
+#             conn_max_age=600)
+#         }
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
