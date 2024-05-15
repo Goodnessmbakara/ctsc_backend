@@ -14,7 +14,7 @@ from .models import (
     Newsletter, Event, TeamMember)
 from .serializers import (
     ContactUsSerializer,PartnerSerializer,ServiceDetailSerializer,
-    NewsLetterSerializer, UserProfileSerializer,TalentProfileSerializer,ClientProfileSerializer,
+    NewsLetterSerializer,UserSerializer, UserProfileSerializer,TalentProfileSerializer,ClientProfileSerializer,
     ServiceSerializer,SignUpSerializer, CustomTokenObtainPairSerializer,
      EventSerializer, TeamMemberSerializer)
 User = get_user_model()
@@ -45,10 +45,10 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
             return ClientProfile.objects.filter(user=user)
         elif user.is_talent:
             return TalentProfile.objects.filter(user=user)
-        return User.objects.filter(email = user.email)
+        return TalentProfile.objects.none()
 
     def get_object(self):
-        return self.get_queryset().get()
+        return self.get_queryset().first()
 
     def get_serializer_class(self):
         user = self.request.user
@@ -59,25 +59,41 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
         return super().get_serializer_class()
 
     def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        instance = self.request.user
-        user_serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        user = request.user
+        profile = self.get_object()
+
+        # Update user fields
+        user_serializer = UserProfileSerializer(user, data=request.data.get('user'), partial=True)
         user_serializer.is_valid(raise_exception=True)
         user_serializer.save()
 
-        # Update profile details based on user type
-        if instance.is_talent:
-            profile_instance = TalentProfile.objects.get(user=instance)
-            profile_serializer = TalentProfileSerializer(profile_instance, data=request.data.get('profile', {}), partial=partial)
-        elif instance.is_client:
-            profile_instance = ClientProfile.objects.get(user=instance)
-            profile_serializer = ClientProfileSerializer(profile_instance, data=request.data.get('profile', {}), partial=partial)
-
+        # Update profile fields
+        profile_serializer = TalentProfileSerializer(profile, data=request.data.get('profile'), partial=True)
         profile_serializer.is_valid(raise_exception=True)
         profile_serializer.save()
 
-        return Response(user_serializer.data, status=status.HTTP_200_OK)
+        return Response({'message': 'Profile updated successfully'}, status=status.HTTP_200_OK)
+
+    # def update(self, request, *args, **kwargs):
+    #     partial = kwargs.pop('partial', False)
+    #     instance = self.get_object()
+    #     instance = self.request.user
+    #     user_serializer = self.get_serializer(instance, data=request.data, partial=partial)
+    #     user_serializer.is_valid(raise_exception=True)
+    #     user_serializer.save()
+
+    #     # Update profile details based on user type
+    #     if instance.is_talent:
+    #         profile_instance = TalentProfile.objects.get(user=instance)
+    #         profile_serializer = TalentProfileSerializer(profile_instance, data=request.data.get('profile', {}), partial=partial)
+    #     elif instance.is_client:
+    #         profile_instance = ClientProfile.objects.get(user=instance)
+    #         profile_serializer = ClientProfileSerializer(profile_instance, data=request.data.get('profile', {}), partial=partial)
+
+    #     profile_serializer.is_valid(raise_exception=True)
+    #     profile_serializer.save()
+
+    #     return Response(user_serializer.data, status=status.HTTP_200_OK)
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):

@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import (ContactUs,  Event,Partner, TalentProfile,
+from .models import (ContactUs,  Event,Partner, TalentProfile,ClientProfile,
                      Newsletter, Service, TeamMember)
 
 User = get_user_model()
@@ -58,25 +58,46 @@ class TalentProfileSerializer(serializers.ModelSerializer):
     def get_cv_document(self, obj):
         if obj.cv_document:
             return self.context['request'].build_absolute_uri(obj.cv_document.url)
+    
+    def update(self, instance, validated_data):
+        user_data = validated_data.pop('user', {})  # Extract user data if provided
+        user = instance.user
+        # Update user fields if provided
+        for attr, value in user_data.items():
+            setattr(user, attr, value)
+        user.save()
+
+        # Update talent profile fields
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
+    
     class Meta:
         model = TalentProfile
         fields = ['user', 'address', 'phone_number','profile_picture', 'cv_document', 'work_experiences']
 
+   
+class ClientProfileSerializer(serializers.ModelSerializer):
+    
     def update(self, instance, validated_data):
+        user_data = validated_data.pop('user', {})  # Extract user data if provided
+        user = instance.user
+        # Update user fields if provided
+        for attr, value in user_data.items():
+            setattr(user, attr, value)
+        user.save()
+
+        # Update client profile fields
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
         return instance
-class ClientProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TalentProfile
+        model = ClientProfile
         fields = ['id', 'first_name', 'last_name', 'address', 'phone_number', 'is_client', 'profile_picture']
 
-    def update(self, instance, validated_data):
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-        instance.save()
-        return instance
+    
 class SignUpSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 

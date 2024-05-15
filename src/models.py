@@ -113,7 +113,7 @@ def create_profile(sender, instance, created, **kwargs):
     if created and not instance.is_staff:  # Only execute for non-staff users
         if instance.is_client:
             ClientProfile.objects.create(user=instance)
-        else:
+        elif instance.is_talent:
             TalentProfile.objects.create(user=instance)
     elif not created:  # Update profile if user is not new
         try:
