@@ -44,7 +44,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        if self.first_name:
+            return f"{self.first_name} {self.last_name}"
+        return self.email
 
 
 class ContactUs(models.Model):

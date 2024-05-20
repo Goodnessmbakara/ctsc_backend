@@ -41,10 +41,11 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_client:
-            return ClientProfile.objects.filter(user=user)
-        elif user.is_talent:
-            return TalentProfile.objects.filter(user=user)
+        if user.is_authenticated:
+            if user.is_client:
+                return ClientProfile.objects.filter(user=user)
+            elif user.is_talent:
+                return TalentProfile.objects.filter(user=user)
         return TalentProfile.objects.none()
 
     def get_object(self):
@@ -52,10 +53,11 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
 
     def get_serializer_class(self):
         user = self.request.user
-        if user.is_client:
-            return ClientProfileSerializer
-        elif user.is_talent:
-            return TalentProfileSerializer
+        if user.is_authenticated:
+            if user.is_client:
+                return ClientProfileSerializer
+            elif user.is_talent:
+                return TalentProfileSerializer
         return super().get_serializer_class()
 
     def update(self, request, *args, **kwargs):
@@ -73,27 +75,6 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
         profile_serializer.save()
 
         return Response({'message': 'Profile updated successfully'}, status=status.HTTP_200_OK)
-
-    # def update(self, request, *args, **kwargs):
-    #     partial = kwargs.pop('partial', False)
-    #     instance = self.get_object()
-    #     instance = self.request.user
-    #     user_serializer = self.get_serializer(instance, data=request.data, partial=partial)
-    #     user_serializer.is_valid(raise_exception=True)
-    #     user_serializer.save()
-
-    #     # Update profile details based on user type
-    #     if instance.is_talent:
-    #         profile_instance = TalentProfile.objects.get(user=instance)
-    #         profile_serializer = TalentProfileSerializer(profile_instance, data=request.data.get('profile', {}), partial=partial)
-    #     elif instance.is_client:
-    #         profile_instance = ClientProfile.objects.get(user=instance)
-    #         profile_serializer = ClientProfileSerializer(profile_instance, data=request.data.get('profile', {}), partial=partial)
-
-    #     profile_serializer.is_valid(raise_exception=True)
-    #     profile_serializer.save()
-
-    #     return Response(user_serializer.data, status=status.HTTP_200_OK)
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
