@@ -151,3 +151,4 @@ def configure_cloudinary():
 
 configure_cloudinary()
 
+ASGI_APPLICATION = 'ctsc_backend.asgi.application'
