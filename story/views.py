@@ -65,7 +65,7 @@ class CreateListAnonymousStoryView(APIView):
 
 
 
-class StoryDetailView(generics.ListAPIView):
+class StoryDetailView(generics.RetrieveAPIView):
     queryset = Story.objects.all()
     serializer_class =  StoryDetailSerializer
     lookup_field = 'story_id'
