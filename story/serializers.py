@@ -6,7 +6,7 @@ from .models import Like, Comment, Story
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-
+from src.serializers import UserSerializer
 User =get_user_model()
 class CommentSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False, allow_null=True)
@@ -28,6 +28,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class StorySerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
+    author = UserSerializer()
 
     def get_image(self, obj):
         if obj.image:

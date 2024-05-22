@@ -74,8 +74,9 @@ class StoryDetailView(generics.ListAPIView):
 class LatestFeaturedStoryView(APIView):
     def get(self, request, *args, **kwargs):
         latest_featured_story = Story.get_latest_featured_story()
+        context = {'request':request}
         if latest_featured_story:
-            serializer = StorySerializer([latest_featured_story], many=True)  # Convert single object to list
+            serializer = StorySerializer([latest_featured_story], many=True, context=context)  # Convert single object to list
             return Response(serializer.data)
         else:
             return Response({"message": "No featured story found."}, status=status.HTTP_404_NOT_FOUND)
