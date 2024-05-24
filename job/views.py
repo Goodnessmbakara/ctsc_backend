@@ -4,10 +4,19 @@ from django.contrib.auth import get_user_model
 from rest_framework import generics
 from rest_framework.response import Response
 from   rest_framework import status
+from django.db.models import Count
 
 from .models import JobApplication, JobOpportunity
 
-from .serializers import JobSerializer
+from .serializers import JobSerializer, CategoryCountSerializer
+
+class CategoryCountView(generics.GenericAPIView):
+    serializer_class = CategoryCountSerializer
+
+    def get(self, request, *args, **kwargs):
+        categories = JobOpportunity.objects.values('category').annotate(count=Count('category')).order_by('-count')
+        serializer = self.get_serializer(categories, many=True)
+        return Response(serializer.data)
 
 class LatestJobOpportunity(generics.ListAPIView):
     queryset = JobOpportunity.objects.all().order_by('-created_at')[:3]

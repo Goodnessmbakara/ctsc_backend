@@ -7,3 +7,7 @@ class JobSerializer(serializers.ModelSerializer):
         model = JobOpportunity
         exclude = ('is_approved',)
         read_only_fields = ['is_approved']
+
+class CategoryCountSerializer(serializers.Serializer):
+    category = serializers.CharField()
+    count = serializers.IntegerField()
