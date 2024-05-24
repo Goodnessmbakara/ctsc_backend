@@ -97,3 +97,20 @@ class LikeCreateView(generics.CreateAPIView):
             return Response({"message": "You have already liked this comment."}, status=status.HTTP_400_BAD_REQUEST)
         serializer = LikeSerializer(like)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class NewsStoriesView(generics.GenericAPIView):
+    serializer_class = StorySerializer
+
+    def get(self, request, *args, **kwargs):
+        currently_featured = Story.get_latest_featured_story()
+        personal_growth_stories = Story.objects.filter(is_approved=True, is_anonymous=False, tags='Personal Growth')[:2]
+        anonymous_stories = Story.objects.filter(is_approved=True, is_anonymous=True)[:2]
+        interview_stories = Story.objects.filter(is_approved=True, is_anonymous=False, tags='Interview')[:2]
+
+        data = {
+            'currently_featured': self.serializer_class(currently_featured).data if currently_featured else None,
+            'personal_growth_stories': self.serializer_class(personal_growth_stories, many=True).data,
+            'anonymous_stories': self.serializer_class(anonymous_stories, many=True).data,
+            'interview_stories': self.serializer_class(interview_stories, many=True).data,
+        }
+        return Response(data)
