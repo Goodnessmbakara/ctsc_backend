@@ -26,6 +26,10 @@ class CreateJobOpportunity(generics.CreateAPIView):
     queryset = JobOpportunity.objects.all()
     serializer_class = JobSerializer
 
+class SingleJobOpportunity(generics.RetrieveUpdateDestroyAPIView):
+    queryset = JobOpportunity.objects.all()
+    serializer_class = JobSerializer
+    
 class ApprovedJobOpportunity(generics.ListAPIView):
     queryset = JobOpportunity.objects.all()
     serializer_class = JobSerializer

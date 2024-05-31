@@ -43,7 +43,7 @@ class ReplyCreateView(generics.CreateAPIView):
             reply_to=parent_comment, story_id =parent_comment.story_id
         )
 
-class StoryListView(generics.ListAPIView):
+class StoryListView(generics.ListCreateAPIView):
     queryset = Story.objects.filter(is_approved = True, is_anonymous=False)
     serializer_class =  StorySerializer
 
@@ -65,7 +65,7 @@ class CreateListAnonymousStoryView(APIView):
 
 
 
-class StoryDetailView(generics.RetrieveAPIView):
+class StoryDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Story.objects.all()
     serializer_class =  StoryDetailSerializer
     lookup_field = 'story_id'
@@ -102,15 +102,16 @@ class NewsStoriesView(generics.GenericAPIView):
     serializer_class = StorySerializer
 
     def get(self, request, *args, **kwargs):
+        context = {'request': request}
         currently_featured = Story.get_latest_featured_story()
         personal_growth_stories = Story.objects.filter(is_approved=True, is_anonymous=False, tags='Personal Growth')[:2]
         anonymous_stories = Story.objects.filter(is_approved=True, is_anonymous=True)[:2]
         interview_stories = Story.objects.filter(is_approved=True, is_anonymous=False, tags='Interview')[:2]
 
         data = {
-            'currently_featured': self.serializer_class(currently_featured).data if currently_featured else None,
-            'personal_growth_stories': self.serializer_class(personal_growth_stories, many=True).data,
-            'anonymous_stories': self.serializer_class(anonymous_stories, many=True).data,
-            'interview_stories': self.serializer_class(interview_stories, many=True).data,
+            'currently_featured': self.serializer_class(currently_featured, context = context).data if currently_featured else None,
+            'personal_growth_stories': self.serializer_class(personal_growth_stories, many=True, context = context).data,
+            'anonymous_stories': self.serializer_class(anonymous_stories, many=True, context = context).data,
+            'interview_stories': self.serializer_class(interview_stories, many=True, context = context).data,
         }
         return Response(data)

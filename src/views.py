@@ -26,11 +26,11 @@ class TeamMemberView(APIView):
         serializer = self.serializer_class(data = members, many =True)
         return Response(serializer.data, status = status.HTTP_200_OK)
     
-class PartnerListView(generics.ListAPIView):
+class PartnerListView(generics.ListCreateAPIView):
     queryset = Partner.objects.all()
     serializer_class = PartnerSerializer
 
-class PartnerDetailView(generics.RetrieveAPIView):
+class PartnerDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Partner.objects.all()
     serializer_class = PartnerSerializer
 
@@ -106,20 +106,21 @@ class CustomServicePagination(PageNumberPagination):
     page_size = 6
     max_page_size = 100
 
-class ServiceListView(generics.ListAPIView):
+class ServiceListView(generics.ListCreateAPIView):
     serializer_class = ServiceSerializer
     queryset = Service.objects.all()
     pagination_class = CustomServicePagination
 
-class ServiceDetailView(generics.RetrieveAPIView):
+class ServiceDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ServiceDetailSerializer
     queryset = Service.objects.prefetch_related('talent_profiles')
     lookup_field = 'service_id'
-class EventView(generics.ListAPIView):
+    
+class EventView(generics.ListCreateAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
 
-class SingleEventView(generics.RetrieveAPIView):
+class SingleEventView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
     lookup_field = 'event_id'
