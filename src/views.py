@@ -63,14 +63,15 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
     def update(self, request, *args, **kwargs):
         user = request.user
         profile = self.get_object()
-
+        serializer = get_serializer_class()
         # Update user fields
         user_serializer = UserProfileSerializer(user, data=request.data.get('user'), partial=True)
         user_serializer.is_valid(raise_exception=True)
         user_serializer.save()
 
         # Update profile fields
-        profile_serializer = TalentProfileSerializer(profile, data=request.data.get('profile'), partial=True)
+        
+        profile_serializer = serializer(profile, data=request.data.get('profile'), partial=True)
         profile_serializer.is_valid(raise_exception=True)
         profile_serializer.save()
 
