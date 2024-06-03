@@ -94,6 +94,7 @@ class TalentProfile(models.Model):
     services = models.ManyToManyField(Service, related_name='talent_profiles')
     cv_document = CloudinaryField('file', blank=True, null=True)
     work_experiences = models.TextField(blank=True, null=True)
+    is_talent = models.BooleanField(default = True)
 
     def __str__(self):
         return self.user.first_name
@@ -103,6 +104,7 @@ class ClientProfile(models.Model):
     profile_picture = CloudinaryField('image', null=True, blank=True)
     address = models.CharField(max_length = 255, null=True, blank=True)
     phone_number = models.CharField(max_length = 20, null=True, blank=True)
+    is_client = models.BooleanField(default = True)
 
 class TeamMember(models.Model):
     first_name = models.CharField(max_length = 50)

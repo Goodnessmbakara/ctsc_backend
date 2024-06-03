@@ -75,7 +75,7 @@ class TalentProfileSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = TalentProfile
-        fields = ['user', 'address', 'phone_number','profile_picture', 'cv_document', 'work_experiences']
+        fields = ['user', 'address', 'phone_number','profile_picture', 'cv_document', 'work_experiences', 'is_talent']
 
    
 class ClientProfileSerializer(serializers.ModelSerializer):
