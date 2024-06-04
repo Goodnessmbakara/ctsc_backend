@@ -63,7 +63,7 @@ class Newsletter(models.Model):
 
 class Event(models.Model):
     event_id = models.AutoField(primary_key = True)
-    event_image = CloudinaryField('image', null=True, blank=True)
+    event_image = models.ImageField(upload_to = 'event_image')
     event_name = models.CharField(max_length = 60)
     date = models.DateField()
     location = models.CharField(max_length = 255)
@@ -82,13 +82,13 @@ class Service(models.Model):
 
 
 class Partner(models.Model):
-    partner_pics = CloudinaryField('image', null=True, blank=True)
+    partner_pics = models.ImageField(upload_to = 'partner_pics')
     name = models.CharField(max_length = 50)
     description = models.TextField()
 
 class TalentProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    profile_picture = CloudinaryField('image', blank=True, null=True)
+    profile_picture = models.ImageField(upload_to = 'profile_picture')
     address = models.CharField(max_length=200, blank=True, null=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     services = models.ManyToManyField(Service, related_name='talent_profiles')
@@ -101,7 +101,7 @@ class TalentProfile(models.Model):
 
 class ClientProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete = models.CASCADE)
-    profile_picture = CloudinaryField('image', null=True, blank=True)
+    profile_picture = models.ImageField(upload_to = 'profile_picture')
     address = models.CharField(max_length = 255, null=True, blank=True)
     phone_number = models.CharField(max_length = 20, null=True, blank=True)
     is_client = models.BooleanField(default = True)
@@ -110,7 +110,7 @@ class TeamMember(models.Model):
     first_name = models.CharField(max_length = 50)
     last_name = models.CharField(max_length = 50)
     about = models.CharField(max_length = 100)
-    profile_image = CloudinaryField('image')
+    profile_image = models.ImageField(upload_to = 'team_member_pics')
 
 @receiver(post_save, sender=CustomUser)
 def create_profile(sender, instance, created, **kwargs):
