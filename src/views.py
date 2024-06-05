@@ -41,11 +41,10 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_authenticated:
-            if user.is_client:
-                return ClientProfile.objects.filter(user=user)
-            elif user.is_talent:
-                return TalentProfile.objects.filter(user=user)
+        if user.is_authenticated and user.is_client:
+            return ClientProfile.objects.filter(user=user)
+        elif user.is_authenticated and user.is_talent:
+            return TalentProfile.objects.filter(user=user)
         return TalentProfile.objects.none()
 
     def get_object(self):
@@ -53,11 +52,10 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
 
     def get_serializer_class(self):
         user = self.request.user
-        if user.is_authenticated:
-            if user.is_client:
-                return ClientProfileSerializer
-            elif user.is_talent:
-                return TalentProfileSerializer
+        if user.is_authenticated and user.is_client:
+            return ClientProfileSerializer
+        elif user.is_authenticated and user.is_talent:
+            return TalentProfileSerializer
         return super().get_serializer_class()
 
     def update(self, request, *args, **kwargs):

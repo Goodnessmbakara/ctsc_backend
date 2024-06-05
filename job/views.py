@@ -3,12 +3,13 @@ from django.shortcuts import render
 from django.contrib.auth import get_user_model
 from rest_framework import generics
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from   rest_framework import status
 from django.db.models import Count
 
 from .models import JobApplication, JobOpportunity
 
-from .serializers import JobSerializer, CategoryCountSerializer
+from .serializers import JobSerializer, CategoryCountSerializer, JobApplicationSerializer
 
 class CategoryCountView(generics.GenericAPIView):
     serializer_class = CategoryCountSerializer
@@ -18,6 +19,14 @@ class CategoryCountView(generics.GenericAPIView):
         serializer = self.get_serializer(categories, many=True)
         return Response(serializer.data)
 
+class JobApplicationView(generics.ListCreateAPIView):
+    queryset = JobApplication.objects.all()
+    serializer_class = JobApplicationSerializer
+    permission_class = [IsAuthenticated]
+    def perform_create(self, serializer):
+        serializer.save()
+        return Response({'message': 'Application submitted successfully'}, status=status.HTTP_201_CREATED)
+    
 class LatestJobOpportunity(generics.ListAPIView):
     queryset = JobOpportunity.objects.all().order_by('-created_at')[:3]
     serializer_class = JobSerializer

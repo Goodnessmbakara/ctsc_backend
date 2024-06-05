@@ -87,12 +87,12 @@ class Partner(models.Model):
     description = models.TextField()
 
 class TalentProfile(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    user = models.OneToOneField('CustomUser', on_delete=models.CASCADE, related_name='talent_profile')
     profile_picture = models.ImageField(upload_to = 'profile_picture')
     address = models.CharField(max_length=200, blank=True, null=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     services = models.ManyToManyField(Service, related_name='talent_profiles')
-    cv_document = CloudinaryField('file', blank=True, null=True)
+    cv_document = models.FileField(blank=True, null=True, upload_to = 'cv_document')
     work_experiences = models.TextField(blank=True, null=True)
     is_talent = models.BooleanField(default = True)
 
@@ -100,7 +100,7 @@ class TalentProfile(models.Model):
         return self.user.first_name
 
 class ClientProfile(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete = models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete = models.CASCADE, related_name='client_profile')
     profile_picture = models.ImageField(upload_to = 'profile_picture')
     address = models.CharField(max_length = 255, null=True, blank=True)
     phone_number = models.CharField(max_length = 20, null=True, blank=True)

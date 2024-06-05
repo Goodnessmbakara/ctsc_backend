@@ -1,6 +1,4 @@
 from django.db import models
-from src.models import TalentProfile
-# Create your models here.
 
 class JobOpportunity(models.Model):
     is_approved = models.BooleanField(default = False)
@@ -23,7 +21,7 @@ class JobOpportunity(models.Model):
 
 class JobApplication(models.Model):
     job_opportunity = models.ForeignKey('JobOpportunity', on_delete=models.CASCADE)
-    talent = models.ForeignKey(TalentProfile, on_delete=models.CASCADE)
+    talent = models.ForeignKey('src.TalentProfile', on_delete=models.CASCADE, related_name='talentprofile')
     applied_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
