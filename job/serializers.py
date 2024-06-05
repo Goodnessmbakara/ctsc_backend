@@ -12,7 +12,7 @@ class JobSerializer(serializers.ModelSerializer):
 class JobApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobApplication
-        fields = ['_all_']
+        fields = '_all_'
         
     def create(self, validated_data):
         user = self.context['request'].user
