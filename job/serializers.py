@@ -18,7 +18,7 @@ class JobApplicationSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         if not user.is_talent:
             raise serializers.ValidationError("You need to have a talent account to be able to apply for roles")
-        talent_profile = user.talentprofile
+        talent_profile = user.talent_profile
         job_application = JobApplication.objects.create(**validated_data, talent=talent_profile)
         return job_application
     
