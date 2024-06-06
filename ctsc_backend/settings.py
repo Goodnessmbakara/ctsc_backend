@@ -152,3 +152,14 @@ def configure_cloudinary():
 configure_cloudinary()
 
 ASGI_APPLICATION = 'ctsc_backend.asgi.application'
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': 'JWT Authorization header using the Bearer scheme. Example: "Authorization: Bearer {token}"',
+        }
+    },        }
+ 
