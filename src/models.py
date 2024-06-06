@@ -3,7 +3,6 @@ from django.db import models
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from cloudinary.models import CloudinaryField
 
 
 
@@ -63,7 +62,7 @@ class Newsletter(models.Model):
 
 class Event(models.Model):
     event_id = models.AutoField(primary_key = True)
-    event_image = models.ImageField(upload_to = 'event_image')
+    event_image = models.ImageField(upload_to = 'event_image', null=True, blank=True)
     event_name = models.CharField(max_length = 60)
     date = models.DateField()
     location = models.CharField(max_length = 255)
@@ -82,13 +81,13 @@ class Service(models.Model):
 
 
 class Partner(models.Model):
-    partner_pics = models.ImageField(upload_to = 'partner_pics')
+    partner_pics = models.ImageField(upload_to = 'partner_pics', null=True, blank=True)
     name = models.CharField(max_length = 50)
     description = models.TextField()
 
 class TalentProfile(models.Model):
     user = models.OneToOneField('CustomUser', on_delete=models.CASCADE, related_name='talent_profile')
-    profile_picture = models.ImageField(upload_to = 'profile_picture')
+    profile_picture = models.ImageField(upload_to = 'profile_picture', null=True, blank=True)
     address = models.CharField(max_length=200, blank=True, null=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     services = models.ManyToManyField(Service, related_name='talent_profiles')
@@ -101,7 +100,7 @@ class TalentProfile(models.Model):
 
 class ClientProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete = models.CASCADE, related_name='client_profile')
-    profile_picture = models.ImageField(upload_to = 'profile_picture')
+    profile_picture = models.ImageField(upload_to = 'profile_picture', null=True, blank=True)
     address = models.CharField(max_length = 255, null=True, blank=True)
     phone_number = models.CharField(max_length = 20, null=True, blank=True)
     is_client = models.BooleanField(default = True)
@@ -122,9 +121,9 @@ def create_profile(sender, instance, created, **kwargs):
     elif not created:  # Update profile if user is not new
         try:
             if instance.is_client:
-                profile = instance.clientprofile
+                profile = instance.client_profile
             else:
-                profile = instance.talentprofile
+                profile = instance.talent_profile
             # Update profile fields if needed
             profile.save()
         except ClientProfile.DoesNotExist:

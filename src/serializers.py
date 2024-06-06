@@ -95,7 +95,7 @@ class ClientProfileSerializer(serializers.ModelSerializer):
         return instance
     class Meta:
         model = ClientProfile
-        fields = ['id', 'first_name', 'last_name', 'address', 'phone_number', 'is_client', 'profile_picture']
+        fields = ['id', 'user', 'address', 'phone_number', 'is_client', 'profile_picture']
 
     
 class SignUpSerializer(serializers.ModelSerializer):
