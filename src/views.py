@@ -19,12 +19,53 @@ from .serializers import (
      EventSerializer, TeamMemberSerializer)
 User = get_user_model()
 
-class TeamMemberView(APIView):
+
+class ClientListView(generics.ListAPIView):
+    queryset = User.objects.filter(is_client=True)
+    serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+class TalentListView(generics.ListAPIView):
+    queryset = User.objects.filter(is_talent=True)
+    serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
+    
+
+class ContactUsListCreateView(generics.ListCreateAPIView):
+    queryset = ContactUs.objects.all()
+    serializer_class = ContactUsSerializer
+    permission_classes = [IsAuthenticated]
+
+class TeamMemberListView(generics.ListCreateAPIView):
+    queryset = TeamMember.objects.all()
     serializer_class = TeamMemberSerializer
-    def get(self,request, format=None):
-        members = TeamMember.objects.all()
-        serializer = self.serializer_class(data = members, many =True)
-        return Response(serializer.data, status = status.HTTP_200_OK)
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return Response({"detail": "You do not have permission to perform this action."}, status=status.HTTP_403_FORBIDDEN)
+        return super().post(request, *args, **kwargs)
+
+class TeamMemberDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = TeamMember.objects.all()
+    serializer_class = TeamMemberSerializer
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return Response({"detail": "You do not have permission to perform this action."}, status=status.HTTP_403_FORBIDDEN)
+        return super().put(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return Response({"detail": "You do not have permission to perform this action."}, status=status.HTTP_403_FORBIDDEN)
+        return super().patch(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return Response({"detail": "You do not have permission to perform this action."}, status=status.HTTP_403_FORBIDDEN)
+        return super().delete(request, *args, **kwargs)
+
     
 class PartnerListView(generics.ListCreateAPIView):
     queryset = Partner.objects.all()
@@ -126,11 +167,7 @@ class SingleEventView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = EventSerializer
     lookup_field = 'event_id'
 
-class ContactUsView(generics.CreateAPIView):
-    queryset = ContactUs.objects.all()
-    serializer_class =  ContactUsSerializer
-
-class NewsLetterCreateView(APIView):
+class NewsLetterListCreateView(generics.ListCreateAPIView):
     serializer_class = NewsLetterSerializer
     queryset = Newsletter.objects.all()
 
