@@ -24,7 +24,10 @@ class JobApplicationView(generics.ListCreateAPIView):
     serializer_class = JobApplicationSerializer
     permission_class = [IsAuthenticated]
     
-    # 
+class JobApplicationDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = JobApplication.objects.all()
+    serializer_class = JobApplicationSerializer
+    permission_class = [IsAuthenticated]
     
 class LatestJobOpportunity(generics.ListAPIView):
     queryset = JobOpportunity.objects.all().order_by('-created_at')[:3]

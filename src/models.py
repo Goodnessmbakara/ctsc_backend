@@ -51,11 +51,15 @@ class ContactUs(models.Model):
     last_name = models.CharField(max_length=50)
     email_address = models.CharField(max_length=100)
     message = models.TextField()
+    def __str__(self):
+        return self.message
 
 class Newsletter(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email_address = models.CharField(max_length=100)
+    def __str__(self):
+        return self.first_name
 
 
 class Event(models.Model):
@@ -69,6 +73,9 @@ class Event(models.Model):
     brief_summary  = models.CharField(max_length  = 255)
     start_time = models. DateTimeField()
     end_time = models. DateTimeField()
+    
+    def __str__(self):
+        return self.event_name
 
 class Service(models.Model):
     service_id = models.AutoField(primary_key = True)
@@ -82,6 +89,9 @@ class Partner(models.Model):
     partner_pics = models.ImageField(upload_to = 'partner_pics', null=True, blank=True)
     name = models.CharField(max_length = 50)
     description = models.TextField()
+    
+    def __str__(self):
+        return self.name
 
 class TalentProfile(models.Model):
     user = models.OneToOneField('CustomUser', on_delete=models.CASCADE, related_name='talent_profile')
@@ -102,12 +112,17 @@ class ClientProfile(models.Model):
     address = models.CharField(max_length = 255, null=True, blank=True)
     phone_number = models.CharField(max_length = 20, null=True, blank=True)
     is_client = models.BooleanField(default = True)
+    
+    def __str__(self):
+        return self.user
 
 class TeamMember(models.Model):
     first_name = models.CharField(max_length = 50)
     last_name = models.CharField(max_length = 50)
     about = models.CharField(max_length = 100)
     profile_image = models.ImageField(upload_to = 'team_member_pics')
+    def __str__(self):
+        return self.first_name
 
 @receiver(post_save, sender=CustomUser)
 def create_profile(sender, instance, created, **kwargs):
