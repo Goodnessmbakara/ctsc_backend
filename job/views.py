@@ -24,13 +24,7 @@ class JobApplicationView(generics.ListCreateAPIView):
     serializer_class = JobApplicationSerializer
     permission_class = [IsAuthenticated]
     
-    def perform_create(self, serializer):
-        user = self.request.user
-        if not user.is_talent:
-            raise serializers.ValidationError("You need to have a talent account to be able to apply for roles")
-        talent_profile = user.talent_profile
-        serializer.save(talent=talent_profile)
-        return Response({'message': 'Application submitted successfully'}, status=status.HTTP_201_CREATED)
+    # 
     
 class LatestJobOpportunity(generics.ListAPIView):
     queryset = JobOpportunity.objects.all().order_by('-created_at')[:3]
