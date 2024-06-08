@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     UserProfileView,ContactUsListCreateView, TeamMemberListView, TeamMemberDetailView, ClientListView, TalentListView,
     NewsLetterListCreateView, EventView, SingleEventView, ServiceDetailView, ServiceListView,CustomTokenObtainPairView, CustomTokenRefreshView, 
-    SignOutView, SignUpView, PartnerListView, PartnerDetailView, PartnerDetailView
+    SignOutView, SignUpView, PartnerListView, PartnerDetailView, PartnerDetailView, GetAllUsersView
 )
 
 urlpatterns = [
@@ -35,5 +35,6 @@ urlpatterns = [
     path('team-members/<int:pk>/', TeamMemberDetailView.as_view(), name='team-member-detail'),
     path('clients/', ClientListView.as_view(), name='client-list'),
     path('talents/', TalentListView.as_view(), name='talent-list'),
+    path('users/', GetAllUsersView.as_view(), name='user-list'),
     
 ]

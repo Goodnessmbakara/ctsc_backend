@@ -19,6 +19,10 @@ from .serializers import (
      EventSerializer, TeamMemberSerializer)
 User = get_user_model()
 
+class GetAllUsersView(generics.ListAPIView):
+    queryset = User.objects.filter(is_client=True)
+    serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
 
 class ClientListView(generics.ListAPIView):
     queryset = User.objects.filter(is_client=True)
