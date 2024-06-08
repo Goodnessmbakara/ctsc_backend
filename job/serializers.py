@@ -13,6 +13,7 @@ class JobApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobApplication
         fields = '__all__'
+        read_only_fields = ['talent', 'applied_date']
         
     def create(self, validated_data):
         user = self.context['request'].user
