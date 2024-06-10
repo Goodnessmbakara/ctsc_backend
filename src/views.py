@@ -38,7 +38,11 @@ class TalentListView(generics.ListAPIView):
 class ContactUsListCreateView(generics.ListCreateAPIView):
     queryset = ContactUs.objects.all()
     serializer_class = ContactUsSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
+
+class ContactUsDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ContactUs.objects.all()
+    serializer_class = ContactUsSerializer
 
 class TeamMemberListView(generics.ListCreateAPIView):
     queryset = TeamMember.objects.all()
