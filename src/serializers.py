@@ -12,13 +12,13 @@ class TeamMemberSerializer(serializers.ModelSerializer):
         model = TeamMember
         fields = '__all__'
 class PartnerSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField()
+    partner_pics = serializers.SerializerMethodField()
 
-    def get_image(self, obj):
-        return self.context['request'].build_absolute_uri(obj.image.url)
+    def get_partner_pics(self, obj):
+        return self.context['request'].build_absolute_uri(obj.partner_pics.url)
     class Meta:
         model = Partner
-        fields = ('id', 'image', 'description')
+        fields = ('id', 'partner_pics', 'description')
 
 
 class UserSerializer(serializers.ModelSerializer):
