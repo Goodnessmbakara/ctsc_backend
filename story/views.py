@@ -51,8 +51,8 @@ class CreateListAnonymousStoryView(APIView):
     serializer_class = StorySerializer
 
     def post(self, request, *args, **kwargs):
-        data = request.data
-        serializer = self.serializer_class(data=data, context={'request': request})
+        data = self.request.data
+        serializer = self.serializer_class(data=data, context={'request': self.request})
         if serializer.is_valid():
             serializer.save(is_anonymous=True, is_approved=False)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -60,7 +60,7 @@ class CreateListAnonymousStoryView(APIView):
 
     def get(self, request):
         anonymous_stories = Story.objects.filter(is_approved=True, is_anonymous=True)
-        serializer = self.serializer_class(anonymous_stories, many=True)
+        serializer = self.serializer_class(anonymous_stories, many=True, context={'request': self.request})
         return Response(serializer.data, status =status.HTTP_200_OK)
 
 
