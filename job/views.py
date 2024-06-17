@@ -33,7 +33,7 @@ class LatestJobOpportunity(generics.ListAPIView):
     queryset = JobOpportunity.objects.all().order_by('-created_at')[:3]
     serializer_class = JobSerializer
 
-class CreateJobOpportunity(generics.CreateAPIView):
+class ListCreateJobOpportunity(generics.ListCreateAPIView):
     queryset = JobOpportunity.objects.all()
     serializer_class = JobSerializer
 
