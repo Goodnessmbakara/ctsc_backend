@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from .models import JobApplication, JobOpportunity
 from src.models import TalentProfile
+from src.serializers import TalentProfileSerializer
 
 class JobSerializer(serializers.ModelSerializer):
     class Meta:
@@ -10,6 +11,7 @@ class JobSerializer(serializers.ModelSerializer):
         read_only_fields = ['is_approved']
 
 class JobApplicationSerializer(serializers.ModelSerializer):
+    talent = TalentProfileSerializer(required = False)
     class Meta:
         model = JobApplication
         fields = '__all__'
