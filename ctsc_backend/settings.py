@@ -1,14 +1,13 @@
 # Import dj-database-url at the beginning of the file.
-import dj_database_url
 import os
-from pathlib import Path
 from datetime import timedelta
+from pathlib import Path
 
-
-from decouple import config
 import cloudinary
-import cloudinary.uploader
 import cloudinary.api
+import cloudinary.uploader
+import dj_database_url
+from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
