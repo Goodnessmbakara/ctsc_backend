@@ -15,7 +15,7 @@ class PartnerSerializer(serializers.ModelSerializer):
     partner_pics = serializers.SerializerMethodField()
 
     def get_partner_pics(self, obj):
-        if obj:
+        if obj.partner_pics:
             return self.context['request'].build_absolute_uri(obj.partner_pics.url)
     class Meta:
         model = Partner
