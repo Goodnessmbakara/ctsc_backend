@@ -47,7 +47,7 @@ class ContactUsDetailView(generics.RetrieveUpdateDestroyAPIView):
 class TeamMemberListView(generics.ListCreateAPIView):
     queryset = TeamMember.objects.all()
     serializer_class = TeamMemberSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         if not request.user.is_staff:
