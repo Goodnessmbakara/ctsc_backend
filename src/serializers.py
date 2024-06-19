@@ -81,7 +81,25 @@ class TalentProfileSerializer(serializers.ModelSerializer):
 
    
 class ClientProfileSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+
+    profile_picture = serializers.SerializerMethodField()
     
+
+    def get_user(self, obj):
+        user = obj.user
+        return {
+            'id': user.id,
+            'firstname': user.first_name,
+            'lastname': user.last_name,
+            'email': user.email,
+            # Add other user fields as needed
+            # Include other user fields you need in the response
+        }
+
+    def get_profile_picture(self, obj):
+        if obj.profile_picture:
+            return self.context['request'].build_absolute_uri(obj.profile_picture.url)
     def update(self, instance, validated_data):
         user_data = validated_data.pop('user', {})  # Extract user data if provided
         user = instance.user
