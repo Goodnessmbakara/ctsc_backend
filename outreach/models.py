@@ -5,6 +5,9 @@ class OutreachBatch(models.Model):
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
+    
+    class Meta:
+        verbose_name_plural = "Outreach Batches"
 
 class Photo(models.Model):
     outreach_batch = models.ForeignKey(OutreachBatch, related_name='photos', on_delete=models.CASCADE, db_index=True)
