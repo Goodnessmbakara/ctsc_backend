@@ -46,6 +46,10 @@ class Story(models.Model):
             self.featured_date = timezone.now()
 
         super().save(*args, **kwargs)
+    
+    class Meta:
+        verbose_name_plural = "Stories"
+        
 
 
 class Comment(models.Model):
