@@ -1,23 +1,37 @@
-from django.shortcuts import render
-
 from django.contrib.auth import get_user_model
-from rest_framework import generics
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from   rest_framework import status
 from django.db.models import Count
+from django.shortcuts import render
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import generics, status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from .models import JobApplication, JobOpportunity
+from .serializers import (CategoryCountSerializer, JobApplicationSerializer,
+                          JobSerializer)
 
-from .serializers import JobSerializer, CategoryCountSerializer, JobApplicationSerializer
 
 class CategoryCountView(generics.GenericAPIView):
     serializer_class = CategoryCountSerializer
+    @swagger_auto_schema(
+        operation_description="Get category counts",
+        responses={
+            200: openapi.Response(
+                description='Category counts',
+                schema=CategoryCountSerializer(many=True)
+            )
+        }
+    )
 
     def get(self, request, *args, **kwargs):
         categories = JobOpportunity.objects.values('category').annotate(count=Count('category')).order_by('-count')
         serializer = self.get_serializer(categories, many=True)
         return Response(serializer.data)
+    
+    def get_queryset(self):
+        # This method is required for ListAPIView, but we're not using it directly
+        return JobOpportunity.objects.none()
 
 class JobApplicationView(generics.ListCreateAPIView):
     queryset = JobApplication.objects.all()

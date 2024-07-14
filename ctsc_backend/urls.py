@@ -14,25 +14,26 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
-from rest_framework import permissions
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
+from channels.routing import ProtocolTypeRouter, URLRouter
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import include, path
+from drf_spectacular.views import (SpectacularAPIView, SpectacularRedocView,
+                                   SpectacularSwaggerView)
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from rest_framework import permissions
 
-
-from channels.routing import ProtocolTypeRouter, URLRouter
 from chatapp import routing as chatsocket_routing
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Your API",
+        title="Cracking The Style Code API",
         default_version='v1',
         description="Your API description",
         terms_of_service="https://www.example.com/policies/terms/",
-        contact=openapi.Contact(email="contact@example.com"),
+        contact=openapi.Contact(email="amicablembakara50@gmail.com"),
         license=openapi.License(name="BSD License"),
     ),
     public=True,
@@ -47,7 +48,10 @@ urlpatterns = [
     path('api/v1/', include('job.urls')),
     path('api/v1/', include('story.urls')),
     path('api/v1/', include('outreach.urls')),
-    path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    # Optional UI:
+    path('', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

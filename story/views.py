@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 # Create your views here.
 
 from .models import Comment, Like, Story
@@ -101,7 +103,14 @@ class LikeCreateView(generics.CreateAPIView):
 
 class NewsStoriesView(generics.GenericAPIView):
     serializer_class = StorySerializer
-
+    @swagger_auto_schema(
+        operation_description="Get news stories",
+        responses={200: openapi.Response('News stories', schema=StorySerializer(many=True))}
+    )
+    
+    def get_queryset(self):
+        # This method is required for ListAPIView, but we're not using it directly
+        return Story.objects.none()
     def get(self, request, *args, **kwargs):
         context = {'request': request}
         currently_featured = Story.get_latest_featured_story()
@@ -115,4 +124,5 @@ class NewsStoriesView(generics.GenericAPIView):
             'anonymous_stories': self.serializer_class(anonymous_stories, many=True, context = context).data,
             'interview_stories': self.serializer_class(interview_stories, many=True, context = context).data,
         }
+        
         return Response(data)

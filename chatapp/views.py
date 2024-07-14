@@ -9,4 +9,6 @@ class MessageViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return Message.objects.filter(Q(sender=user) | Q(receiver=user))
+        if user.is_authenticated:
+            return Message.objects.filter(Q(sender=user) | Q(receiver=user))
+        return Message.objects.none()
