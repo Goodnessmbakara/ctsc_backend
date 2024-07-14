@@ -46,6 +46,7 @@ urlpatterns = [
     path('api/v1/', include('chatapp.urls')),
     path('api/v1/', include('job.urls')),
     path('api/v1/', include('story.urls')),
+    path('api/v1/', include('outreach.urls')),
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
