@@ -24,7 +24,7 @@ if RENDER_EXTERNAL_HOSTNAME:
 
 INSTALLED_APPS = [
     #"daphne",
-    'jazzmin',
+    #'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
